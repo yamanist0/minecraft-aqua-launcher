@@ -203,7 +203,7 @@ async function loadHomeModpackCarousel() {
   console.debug('loadHomeModpackCarousel: start');
   showHomeLoading('modpack', true);
   try {
-    const urls = state.settings?.modpackUrls || ['https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/modpacks.json'];
+    const urls = state.settings?.modpackUrls || ['https://raw.githubusercontent.com/yamanist0/aqua-launcher/refs/heads/main/modpacks.json'];
     let allModpacks = [];
     for (const u of urls) {
       try {
@@ -974,8 +974,8 @@ function bindEvents() {
       const newSettings = {
          password: $('setting-password').value,
          javaArgs: $('setting-java-args').value,
-         modpackUrls: urls.length ? urls : ['https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/modpacks.json'],
-         serverListUrl: serverListUrl || 'https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/servers.json',
+         modpackUrls: urls.length ? urls : ['https://raw.githubusercontent.com/yamanist0/aqua-launcher/refs/heads/main/modpacks.json'],
+         serverListUrl: serverListUrl || 'https://raw.githubusercontent.com/yamanist0/aqua-launcher/refs/heads/main/servers.json',
          memory: state.memory,
       };
       state.settings = newSettings;
@@ -1179,7 +1179,7 @@ async function loadModpacksList() {
 
   loading?.classList.remove('hidden');
   try {
-    const urls = state.settings.modpackUrls || ['https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/modpacks.json'];
+    const urls = state.settings.modpackUrls || ['https://raw.githubusercontent.com/yamanist0/aqua-launcher/refs/heads/main/modpacks.json'];
     let allModpacks = [];
     
     for (const u of urls) {
