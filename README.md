@@ -58,3 +58,9 @@ Server List uses exact minecraft-mp.com data. You can aslo change the data sourc
 ├── services/       # Modpack & launcher logic
 ├── assets/         # Icons & branding
 └── build.bat       # Windows packaging script
+
+<br>
+<hr>
+<p align="center">
+  <small>Made with 🤍 by <a href="https://github.com/yamanist">yamanist</a></small>
+</p>
