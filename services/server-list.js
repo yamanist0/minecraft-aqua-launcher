@@ -2,7 +2,7 @@ const net = require('net');
 const dns = require('dns').promises;
 
 const DEFAULT_SERVERS_URL =
-  'https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/servers.json';
+  'https://raw.githubusercontent.com/yamanist0/aqua-launcher/refs/heads/main/servers.json';
 const PAGE_SIZE = 30;
 const CACHE_TTL_MS = 5 * 60 * 1000;
 const PING_TIMEOUT_MS = 2000;
