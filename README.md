@@ -13,10 +13,10 @@
 
 ---
 
-### 📋 Overview
+### Overview
 **Aqua Launcher** is a lightweight, desktop-first Minecraft launcher. It provides a polished interface for managing modpacks, version control, and custom loader configurations, ensuring a seamless experience for power users. It has a really easy interface to understand. Supports both offline and microsoft accounts.
 
-### 🚀 Key Features
+### Key Features
 * **Custom Modpack Management:** Isolated asset folders for per-pack organization.
 * **Modrinth Integration:** Fast version resolution for compatible downloads.
 * **Persistent Configs:** Intelligent RAM and JVM settings handling.
@@ -33,7 +33,7 @@ Server List uses exact minecraft-mp.com data. You can aslo change the data sourc
 
 ---
 
-### 📂 Project Structure
+### Project Structure
 ```text
 ├── main.js         # Main process & IPC handlers
 ├── renderer.js     # UI logic & event handling
