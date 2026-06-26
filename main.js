@@ -81,17 +81,17 @@ function registerIpcHandlers() {
               modpackUrls: [],
               javaArgs: '',
               password: '',
-              serverListUrl: 'https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/servers.json',
+              serverListUrl: 'https://raw.githubusercontent.com/yamanist0/aqua-launcher/refs/heads/main/servers.json',
             },
             JSON.parse(fs.readFileSync(getSettingsPath(), 'utf8')),
           );
        }
      } catch (e) {}
      return {
-       modpackUrls: ['https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/modpacks.json'],
+       modpackUrls: ['https://raw.githubusercontent.com/yamanist0/aqua-launcher/refs/heads/main/modpacks.json'],
        javaArgs: '',
        password: '',
-       serverListUrl: 'https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/servers.json',
+       serverListUrl: 'https://raw.githubusercontent.com/yamanist0/aqua-launcher/refs/heads/main/servers.json',
      };
   });
 
