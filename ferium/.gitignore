@@ -1,9 +1,0 @@
-/target
-/.idea
-/.vscode
-/out
-/tests/configs/running
-/tests/mods
-/tests/md_modpack
-/tests/cf_modpack
-**/.DS_Store
