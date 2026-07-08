@@ -64,9 +64,9 @@
 
 [![Aqua Launcher Overview Screenshot][product-screenshot]](https://github.com/yamanist0/minecraft-aqua-launcher)
 
-Aqua Launcher is an independent, highly optimized Minecraft launcher built using Electron and modern web technologies. It is engineered to supersede traditional game launchers by providing deep integration with global modpack repositories, independent local storage isolation, and an incredibly fluid user interface.
+Aqua Launcher A custom, standalone and highly optimised Minecraft launcher made with Electron & web technologies, designed to replace current launchers by deeply integrating with all world modpack repositories, isolating its own local storage & being buttery smooth to navigate.
 
-Unlike standard launchers that clutter the root game directory, Aqua Launcher utilizes isolated environment deployments for individual modpacks. This guarantees that Minecraft configuration files, save states, modifications, and dependencies operate cleanly per-instance. Furthermore, the application relies heavily on dynamic DOM manipulation and caching to simulate native performance standards, leveraging specialized proxies to bypass API restrictions on CurseForge and Modrinth.
+Whereas other launchers litter your root Minecraft install with files, Aqua Launcher is designed to leverage isolated environment deployments per modpack instance to provide a clean separation of save states, mod files, Minecraft configuration files, and any other mod dependencies. Aqua Launcher employs heavy use of caching, and dynamically manipulated DOM to simulate the feeling of native application performance, and uses custom proxies to circumvent API rate limitations imposed on CurseForge and Modrinth.
 
 ### Built With
 
@@ -76,61 +76,60 @@ Unlike standard launchers that clutter the root game directory, Aqua Launcher ut
 
 ### Core Mechanics
 
-The core philosophy of Aqua Launcher revolves around a modular, asynchronous interaction logic between the background Node process and the visual Chromium sandbox.
+The idea at the heart of Aqua Launcher: a modular, asynchronous interaction pattern between the background Node process and the Chromium sandbox.
 
-* **Inter-Process Communication:** Preload scripts negotiate secure streams between the frontend and core framework, exposing only critical filesystem and network directives to the renderer layout.
-* **Authentication:** Integrates specialized modules for certified Microsoft Xbox Live handshakes, securely retrieving access tokens and managing encrypted offline mode environments.
-* **Dynamic Resolution:** Modrinth and CurseForge interactions are facilitated through custom Cloudflare Worker proxies to sanitize REST inputs and bypass strict CORS protocols, allowing the client to resolve manifest formats dynamically before pushing data to the localized download core.
-* **Liquid Animations:** Relies exclusively on Tailwind utility toggles interacting directly with CSS rulesets to orchestrate non-blocking scale, opacity, and transform transitions across internal navigation views without causing rigid reflow bottlenecks.
+**Inter-Process Communication:** The pre-loaded scripts coordinate protected streams between the front-end UI and core framework, exposing only essential file-system and networking directives to the render layer.
+**Authentication:** Includes dedicated module for official Microsoft Xbox Live handshakes for reliable acquisition of authorization tokens and encrypted offline space.
+**Dynamic Resolution:** Modrinth & CurseForge resource management is made possible through Cloudflare Worker proxies designed to sanitize REST input and overcome rigid CORS requirements, permitting clients to resolve manifest types on the fly and stream content to a local download core.
+**Liquid Animations:** Strictly utilizes Tailwind utility toggles directly tied into the CSS class names, ensuring non-blocking scale, opacity, and transform operations within the main navigation flow and prevent nasty re-flow reflow bugs.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Page Architecture
-
-Aqua Launcher isolates content rendering into structured HTML partition blocks within a singular environment, selectively rendering frames to optimize hardware memory loading overheads. Below is a careful inspection of the application pages.
+Aqua Launcher separate content from hardware into standard HTML partition blocks in the one environment and dynamically rendered the frames to reduce overhead with hardware loading. The below will a detail observation of application pages.
 
 ### Home Menu
 
 [![Home Menu Screenshot][home-screenshot]](https://github.com/yamanist0/minecraft-aqua-launcher)
 
-The Home Menu serves as the central command hub of the client. Upon authentication, asynchronous loops query local persistence profiles alongside isolated remote APIs to construct discovery panels.
+The Home Menu functions as the client's remote command center. Asynchronous loops will be spun up to hit both local persistent profiles and separate remote APIs for the creation of the discovery panels post-login.
 
-* **Modpack Explorer Carousel:** Instantly presents high-priority content items directly over a horizontal flex framework. Cards deploy an active visual skeleton masking sequence to counteract layout shifting before raw network data finalizes.
-* **Live Server Highlights:** Integrates dynamic server retrieval, parsing JSON inputs to pull multiplayer connections directly onto the main page, generating immediate fast-join references.
-* **News Aggregator:** Fetches localized or remote repository data detailing gameplay shifts, system updates, and community alerts, populating symmetrically across timeline blocks.
-* **Persistent State Navigation:** Logs the exact parameters of the previously launched version instance and memory allocation to the master storage variables automatically, establishing the bottom operational dock for absolute minimal-click deployments.
+* **Modpack Explorer Carousel:** Showcases prioritized content items immediately in addition to a horizontal flex container. Cards display a proactive structural cover reveal system for mitigating a reflow when unadulterated stream information resolves.
+* **Live Server Highlights:** Brings live servers together through stream analysis with native JSON consumption and directly injecting public connections to establish immediate direct play quick-select.
+* **News Aggregator:** Harvests the latest patch data on game changes, core system enhancements and social communications whether regionally cached or remotely sourced on two identical timeline columns.
+* **Persistent State Navigation:** The identical session parameter information including ram usage parameters are permanently stored into the principal variables on exit for the minimal touch bottom command line.
 
 ### Modpacks Menu
 
 [![Modpacks Menu Screenshot][modpacks-screenshot]](https://github.com/yamanist0/minecraft-aqua-launcher)
 
-This module handles absolute fetching, localized formatting, and indexing mapping of customized engine states.
+Module which manages the actual fetch of custom engine states, and the locale-based rendering and index-mapping of these custom engine states.
 
-* **Four-Tier Architecture:** Smooth tab logic swaps the application query scope linearly across Installed Archives, Custom Catalogs, Modrinth Repositories, and the external CurseForge ecosystem.
-* **Intelligent File Scaffolding:** Engages custom unpacking algorithms utilizing `adm-zip` to extract `.mrpack` architecture arrays and standard zip layouts interchangeably on the node system.
-* **Search and Filter Dynamics:** An input detection protocol bound to native debouncing intercepts query exhaustion. This executes secure backend requests returning faceted categories immediately while preserving rigid application fluidity. 
-* **State Masking:** Unidentified, remote library nodes deploy translucent data markers. These states transfer gracefully into deterministic progress boundaries informing file manipulation phases up until installation termination transforms into standard execution nodes.
+* **Four-Tier Architecture:** Seamless tab logic iteratively cycles the application query across Installed Archives, Custom Catalogs, Modrinth Repositories, and the external CurseForge ecosystem.
+* **Intelligent File Scaffolding:** Utilises custom unpack procedures leveraging adm-zip to process both .mrpack architecture arrays and standard zips equally on the node.
+* **Search and Filter Dynamics:** An input sensing protocol tied to native debouncing identifies exhaustion. This triggers secured backend calls producing faceted category information without impact on rigid application state.
+* **State Masking:** Unidentified, remote library nodes inject transmissive data flags. States are seamlessly transitionated into bounded conditions directing file operations through to installation ending.
 
 ### Multiplayer Menu
 
 [![Multiplayer Menu Screenshot][multiplayer-screenshot]](https://github.com/yamanist0/minecraft-aqua-launcher)
 
-An optimized discovery grid parsing specialized IP registries to map external hub references automatically, depending on backend configuration maps.
+A specially implemented IP registry for Optimized Discovery Grid parsing can be automatically configured to parse external hub references.
 
-* **Chronological Ping Mechanics:** Asynchronously pings remote Java Edition domains spanning across interval limits, writing active server densities and player parameters directly onto interactive cards.
-* **Clipboard Intercept:** Tracks click operations dynamically over individual network objects to store host addresses directly into the local system clipboard memory immediately, firing localized toast verifications.
-* **Logical Page Navigation:** Processes mathematical slicing offsets to subdivide extensive network arrays chronologically across manageable categories, drastically limiting DOM bloat.
+* Asynchronously pings remote Java Edition servers beyond each interval, rendering server densities and playercounts on interactive cards.
+* Automatically records each individual network node's onClick event and writes each of its associated IP address into your OS clipbaord, displaying localized toast messages on click.
+* Automatically mathematically slices long network arrays to allow them to dynamically load as much lessDOM is stored in memory at any one time.
 
 ### Settings Menu
 
 [![Settings Menu Screenshot][settings-screenshot]](https://github.com/yamanist0/minecraft-aqua-launcher)
 
-A secured sector operating strict parameters governing the backend node daemon processing logic.
+This is a secured area where the logic governing how the backend node daemon processes commands is highly regulated and has rigid controls placed on it.
 
-* **Secure Authentication Control:** Bounded by an animated screen gate demanding secondary credentials prior to entry (when set up).
-* **Proxy Binding Configuration:** Submits explicit overrides specifying CurseForge domain fetch proxies, preserving routing capabilities over alternative infrastructure variants.
-* **Java Virtual Machine Arbiters:** Submits unrestricted string parameters linking directly against sub-process initiation modules. These commands coordinate deep systems ranging from external hardware acceleration rules to native garbage compilation flags.
-* **Volatile Memory Controls:** Interactive arbitrary range bindings strictly connected to the master system file (`settings.json`). Adjusts explicit boundary allocations before process executions.
+* **Access to Authentication Gate Control:** Bound by an animated screen gate requiring secondary authentication prior to entrance (if configured).
+* **Access to Proxy Binding Configuration:** Sends direct override requests pertaining to CurseForge domain fetch proxies, maintains the usage of your preferred alternative infrastructure through this capability.
+* **Access to Java Virtual Machine Arbiters:** Sends direct unconstrained string arguments that bind directly to sub process initiation modules, facilitating control over deep systems ranging from external hardware acceleration settings to raw native garbage compilation.
+* **Access to Volatile Memory Controls:** Realtime arbitrary range bindings that are directly tethered to your master system file (settings.json), modifying arbitrary boundary conditions prior to processes are spawned.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -148,12 +147,12 @@ You must execute commands utilizing native NPM standards.
 
 ### Installation
 
-1. Establish your Cloudflare Worker node endpoints corresponding to CurseForge parameters (native instances use generic placeholders inside settings).
+1. Set your Cloudflare Worker endpoints that relate to your CurseForge parameters (native instances use default placeholder values inside settings).
 2. Clone the core repository locally.
    ```sh
    git clone https://github.com/yamanist0/minecraft-aqua-launcher.git
    ```
-3. Read the master requirements and pull modules utilizing standard npm patterns.
+3. Parse master requirements and fetch modules using standard npm conventions.
    ```sh
    npm install
    ```
@@ -168,20 +167,20 @@ You must execute commands utilizing native NPM standards.
 
 Aqua Launcher relies completely onto `launcher-service.js` logic handlers which maintain overarching application isolation schemas. 
 
-1. **Authentication Sequences:** Establish offline parameter bypass modes or validate standard tokens via Microsoft endpoints directly internally without shifting browser logic strings.
-2. **Dynamic Dependency Selection:** Trigger modals designed to parse Vanilla parameters alongside respective Forge and Fabric arrays via specific meta networks independently to circumvents standard Chromium visibility conflicts against absolute CSS layouts.
-3. **Execution Sequences:** Triggers command streams through localized metadata evaluation checks mapped specifically over `.minecraft/versions` architecture loops. Executes internal configurations routing through isolated directory mappings without breaking core local save operations.
+1. **Authentication Sequences:** Enable offline parameter bypass or query standard tokens through Microsoft directly in house, no need to be redirecting in the browser with strings.
+2. **Dynamic Dependency Selection:** Throw modals in the mix that would be capable of parsing out Vanilla parameters with respective Forge and Fabric arrays in the arrays independently via targeted meta networks so we can be avoiding standard chromium rendering visibility conflicts over top of the absolute position of any element layout we need.
+3. **Execution Sequences:** Command strings via direct localized meta checks run specifically across .minecraft/versions architectures loops. Running through our isolated local directory mappings instead of anything breaking the native save locations.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Roadmap
 
-- [x] Configure Microsoft backend authorizations directly resolving against Xbox Live flows.
-- [x] Assemble internal modpack abstraction logic merging independent network endpoints uniformly.
-- [x] Format internal rendering state triggers enforcing rigid skeletal masking loops against local files.
-- [x] Integrate precise transition controls replacing rigid framework classes exclusively toward dynamic scale behaviors.
-- [ ] Enlist infinite scroll parsing logic against the chronological notification list mapping sequences.
-- [ ] Implement integrated Java installation fallback handling protocols specifically managing JVM discrepancies.
+- [x] Microsoft backend authorizations to map to Xbox live directly.
+- [x] Internal modpack abstraction merging of network endpoints on the local files.
+- [x] Internal rendering state triggers for rendering a rigid skeletonmaskingloop to localfiles.
+- [x] Integrated and fine tuned controls replacing framework class with scale behavior dynamically.
+- [ ] Infinite scroll parsing logic against the chronical notification list.
+- [ ] integrated Java installing to provide a fallback to JVM mismatches.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
