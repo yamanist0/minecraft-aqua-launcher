@@ -62,7 +62,7 @@
 
 ## About The Project
 
-[![Aqua Launcher Overview Screenshot][product-screenshot]](https://github.com/yamanist0/minecraft-aqua-launcher)
+[![Home Menu Screenshot][home-screenshot]](https://github.com/yamanist0/minecraft-aqua-launcher)
 
 Aqua Launcher A custom, standalone and highly optimised Minecraft launcher made with Electron & web technologies, designed to replace current launchers by deeply integrating with all world modpack repositories, isolating its own local storage & being buttery smooth to navigate.
 
