@@ -214,12 +214,12 @@ async function resolveJavaPath(mcVersion) {
 async function getJavaInfo(mcVersion) {
   const required = getRequiredJavaVersion(mcVersion);
   const installations = await findInstalledJava();
-  const selected = installations.find((item) => item.version >= required) || null;
+  const picked = installations.find((item) => item.version >= required) || null;
 
   return {
     required,
-    selected: selected
-      ? { version: selected.version, path: selected.path, label: selected.label }
+    picked: picked
+      ? { version: picked.version, path: picked.path, label: picked.label }
       : null,
     installed: installations.map((item) => ({
       version: item.version,
