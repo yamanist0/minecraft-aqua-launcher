@@ -79,10 +79,10 @@ function registerIpcHandlers() {
     launcherService.launch(options),
   );
 
-  const getSettingsPath = () => path.join(app.getPath('userData'), 'settings.json');
+  const whereToFindSettings = () => path.join(app.getPath('userData'), 'settings.json');
   ipcMain.handle('launcher:get-settings', () => {
      try {
-       if (fs.existsSync(getSettingsPath())) {
+       if (fs.existsSync(whereToFindSettings())) {
           return Object.assign(
             {
               modpackUrls: [],
@@ -90,7 +90,7 @@ function registerIpcHandlers() {
               password: '',
               serverListUrl: 'https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/servers.json',
             },
-            JSON.parse(fs.readFileSync(getSettingsPath(), 'utf8')),
+            JSON.parse(fs.readFileSync(whereToFindSettings(), 'utf8')),
           );
        }
      } catch (e) {}
@@ -103,7 +103,7 @@ function registerIpcHandlers() {
   });
 
   ipcMain.handle('launcher:save-settings', (_, newSettings) => {
-     fs.writeFileSync(getSettingsPath(), JSON.stringify(newSettings, null, 2));
+     fs.writeFileSync(whereToFindSettings(), JSON.stringify(newSettings, null, 2));
   });
 
   ipcMain.handle('launcher:download-modpack', async (_, packId, modpackData) => {
