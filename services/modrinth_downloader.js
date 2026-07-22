@@ -26,6 +26,7 @@ function isCompatibleGameVersion(requested, candidate) {
 async function modrinthFetch(pathname) {
   const url = `${MODRINTH_API_BASE}${pathname}`;
   const res = await fetch(url);
+  // make sure the request worked fine before we parse it
   if (!res.ok) {
     throw new Error(`Modrinth API ${res.status}: ${res.statusText}`);
   }
