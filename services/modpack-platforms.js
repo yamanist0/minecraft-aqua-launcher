@@ -128,7 +128,7 @@ async function searchModrinth(query, facets, offset = 0, limit = 20) {
   params.set('query', query);
   params.set('limit', limit.toString());
   params.set('offset', offset.toString());
-  // Filter for modpacks project type
+// we only want modpacks here
   const allFacets = [['project_type:modpack']];
   if (facets) allFacets.push(...facets);
   params.set('facets', JSON.stringify(allFacets));
