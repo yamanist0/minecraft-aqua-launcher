@@ -193,6 +193,7 @@ async function buildLaunchOptions({
 }
 
 function formatVersionLabel(loader, mcVersion, loaderVersion) {
+  console.debug("formatVersionLabel:", loader, mcVersion);
   if (loader === 'vanilla') return `Vanilla ${mcVersion}`;
   if (loader === 'fabric') {
     return `Fabric ${mcVersion}${loaderVersion ? ` (${loaderVersion})` : ''}`;
