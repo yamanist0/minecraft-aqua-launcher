@@ -667,6 +667,7 @@ function updateServerPlayersUI({ page, ip, players, online, live, version }) {
 }
 
 function resetDownloadProgress() {
+  console.log('resetting progress', downloadProgress);
   downloadProgress.phase = '';
   downloadProgress.percent = 0;
   downloadProgress.lastUiUpdate = 0;
