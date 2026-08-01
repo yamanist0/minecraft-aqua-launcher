@@ -32,6 +32,7 @@ export default {
     }
 
     const apiKey = env.CF_API_KEY;
+    // make sure the api key is actually set in the environment
     if (!apiKey) {
       return new Response(JSON.stringify({
         error: "CF_API_KEY is missing. Please add it to your Cloudflare Worker Environment Variables."
