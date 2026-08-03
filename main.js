@@ -177,6 +177,7 @@ function registerIpcHandlers() {
             res.on('data', (chunk) => (body += chunk));
             res.on('end', () => {
               try {
+                // Turn the raw text we received into a javascript object
                 const json = JSON.parse(body);
                 resolve(json);
               } catch (e) {
