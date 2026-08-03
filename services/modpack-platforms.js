@@ -116,9 +116,9 @@ function extractOverrides(zipPath, overridesFolder, outputDir) {
 
 function readJsonFromZip(zipPath, jsonFilePath) {
   const zip = new AdmZip(zipPath);
-  const entry = zip.getEntry(jsonFilePath);
-  if (!entry) return null;
-  return JSON.parse(entry.getData().toString('utf8'));
+  const item = zip.getEntry(jsonFilePath);
+  if (!item) return null;
+  return JSON.parse(item.getData().toString('utf8'));
 }
 
 // ─── Modrinth API ────────────────────────────────────────────────────
