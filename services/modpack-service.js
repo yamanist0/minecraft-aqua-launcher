@@ -259,6 +259,7 @@ class ModpackService {
   }
 
   async reinstallModpack(packId, modpackData) {
+    // Just reuse the install function and force it to reinstall
     return this.installModpack(packId, modpackData, true);
   }
 
