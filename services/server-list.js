@@ -11,6 +11,7 @@ const PING_CONCURRENCY = 6;
 function writeVarInt(value) {
   const bytes = [];
   while (true) {
+    console.log("Current value and bytes:", value, bytes);
     if ((value & 0xffffff80) === 0) {
       bytes.push(value);
       return Buffer.from(bytes);
