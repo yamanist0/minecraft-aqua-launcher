@@ -253,6 +253,7 @@ async function searchCurseForge(query, proxyBaseUrl, index = 0, pageSize = 20) {
   params.set('index', index.toString());
   params.set('sortField', '2'); // Popularity
   params.set('sortOrder', 'desc');
+  console.log("Searching CurseForge with params: " + params.toString());
   return cfProxyFetch(proxyBaseUrl, `/v1/mods/search?${params.toString()}`);
 }
 
