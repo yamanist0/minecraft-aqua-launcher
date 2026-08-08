@@ -55,6 +55,7 @@ function readString(buffer, offset = 0) {
 }
 
 function writeString(str) {
+  console.log("writeString input:", str);
   const buf = Buffer.from(str, 'utf8');
   return Buffer.concat([writeVarInt(buf.length), buf]);
 }
