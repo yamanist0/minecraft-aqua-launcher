@@ -13,7 +13,7 @@ let modpackService;
 let serverListService;
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
-app.commandLine.appendSwitch('log-level', '3'); // Suppress noise
+app.commandLine.appendSwitch('log-level', '3'); // gurultuyu bastir
 
 function sendToRenderer(channel, data) {
   mainWindow?.webContents.send(channel, data);
@@ -143,7 +143,7 @@ function registerIpcHandlers() {
     return Object.assign({}, modpackService.manifest);
   });
 
-  // ─── Modrinth IPC ──────────────────────────────────────────────
+  // modrinth icin ipc kayitlari
   ipcMain.handle('launcher:search-modrinth', async (_, query, facets, offset, limit) => {
     return platforms.searchModrinth(query, facets, offset, limit);
   });
@@ -160,7 +160,7 @@ function registerIpcHandlers() {
     return modpackService.installMrpackPack(packId, versionData, meta);
   });
 
-  // ─── CurseForge IPC ────────────────────────────────────────────
+  // curseforge icin ipc kayitlari
   ipcMain.handle('launcher:search-curseforge', async (_, query, proxyBaseUrl, index, pageSize) => {
     return platforms.searchCurseForge(query, proxyBaseUrl, index, pageSize);
   });

@@ -119,7 +119,7 @@
             pointer-events: none;
         }
         
-        /* Custom scrollbar for webkit */
+        /* custom webkit scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -164,7 +164,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Neumorphic components */
+        /* neumorphic components */
         .neu-card {
             position: relative;
             background: #2d2d32;
@@ -626,7 +626,7 @@
         #status-panel[data-state="running"] .status-accent { background: #4caf50; }
         #status-panel[data-state="error"] .status-accent { background: #ffb4ab; }
 
-        /* Static page-level UI element reveal animation */
+        /* page ui reveal animation */
         .page-ui {
             opacity: 0;
             transform: translateY(10px);
@@ -1314,7 +1314,7 @@
     </style>
 </head>
 <body class="h-screen w-screen relative font-body-md text-body-md overflow-hidden bg-background">
-<!-- Panorama Background (Minecraft cube map) -->
+<!-- panorama arka plan -->
 <div class="absolute inset-0 z-0">
   <div class="panorama-container">
     <div class="panorama-scene">
@@ -1328,11 +1328,9 @@
   </div>
   <div id="panorama-overlay" class="absolute inset-0 bg-black"></div>
 </div>
-<!-- Main Application Container -->
 <div class="relative z-10 flex h-full w-full">
-<!-- SideNavBar -->
+<!-- yan menü -->
 <nav class="neu-side w-[280px] h-full flex flex-col py-6 px-5 flex-shrink-0 z-20 titlebar-drag">
-<!-- Header -->
 <div class="neu-logo-box mb-7">
   <div class="w-10 h-10 rounded-xl neu-inset flex items-center justify-center overflow-hidden flex-shrink-0">
     <img src="assets/logo.svg" alt="Aqua Launcher" class="w-full h-full object-cover" />
@@ -1342,16 +1340,14 @@
     <p class="font-label-sm text-[10px] text-on-surface-variant opacity-70">v3.0</p>
   </div>
 </div>
-<!-- Navigation Links -->
 <div class="flex flex-col gap-3 flex-grow titlebar-no-drag pb-6">
 <a id="nav-home" class="neu-nav active titlebar-no-drag"><span>Home</span></a>
 <a id="nav-modpacks" class="neu-nav titlebar-no-drag"><span>Modpacks</span></a>
 <a id="nav-multiplayer" class="neu-nav titlebar-no-drag"><span>Multiplayer</span></a>
 <a id="nav-settings" class="neu-nav titlebar-no-drag"><span>Settings</span></a>
 </div>
-<!-- Configuration Area -->
+<!-- ayar alani -->
 <div class="mt-auto mb-6 flex flex-col gap-4">
-<!-- Account Selection -->
 <div id="account-card" class="neu-card-sm p-3 flex items-center justify-between titlebar-no-drag">
 <div class="flex items-center gap-3">
 <div class="w-8 h-8 rounded-full neu-inset overflow-hidden flex items-center justify-center">
@@ -1366,7 +1362,6 @@
 </div>
 <span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
 </div>
-<!-- Version Selection -->
 <div id="version-card" class="neu-card-sm p-3 flex items-center justify-between titlebar-no-drag">
 <div class="flex flex-col">
 <span class="font-label-sm text-[10px] text-on-surface-variant">Version</span>
@@ -1378,7 +1373,6 @@
 </div>
 <span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
 </div>
-<!-- PLAY Button -->
 <button id="btn-play" disabled class="neu-play titlebar-no-drag">
 <span id="btn-play-content" class="flex items-center justify-center gap-2">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
@@ -1386,7 +1380,6 @@
     </span>
 </button>
 </div>
-<!-- Footer -->
 <div class="flex items-center justify-between pt-4 border-t border-white/5">
 <span class="font-label-sm text-label-sm text-on-surface-variant">v3.0</span>
 <a class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="https://github.com/yamanist0" target="_blank" title="yamanist0 on GitHub">
@@ -1395,10 +1388,8 @@
 </a>
 </div>
 </nav>
-<!-- Main Content Area (Empty to show aurora) -->
 <main class="flex-grow relative h-full flex flex-col justify-between">
   <div id="window-drag-handle" class="absolute top-0 left-0 right-0 h-16 titlebar-drag z-40"></div>
-<!-- TopAppBar area (transparent) -->
 <header class="flex justify-end items-center w-full px-8 h-16 bg-transparent titlebar-drag relative z-50">
 <div class="flex items-center gap-4 titlebar-no-drag">
 <button id="btn-notifications" class="neu-toggle" title="Toggle notifications">
@@ -1420,7 +1411,7 @@
 </div>
 </div>
 </header>
-<!-- Home View Content -->
+<!-- ana sayfa -->
 <div id="view-home-content" class="page-pane absolute left-0 right-0 top-[70px] bottom-0 px-10 z-0 overflow-y-auto pb-24 active">
   <div id="active-modpack-panel" class="neu-card max-w-xl p-5 hidden">
     <div class="flex items-start gap-4">
@@ -1470,7 +1461,6 @@
         <span class="material-symbols-outlined animate-spin text-primary text-[28px]">sync</span>
       </div>
       <div id="home-modpack-scroller" class="hidden flex gap-3 overflow-hidden pb-2 scroll-smooth hide-scrollbar py-2 rounded-[28px]">
-        <!-- Home modpack cards -->
       </div>
       <button id="home-modpack-next" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full neu-btn hidden flex items-center justify-center">
         <span class="material-symbols-outlined text-[24px]">chevron_right</span>
@@ -1494,8 +1484,7 @@
         <span class="material-symbols-outlined animate-spin text-primary text-[28px]">sync</span>
       </div>
       <div id="home-server-scroller" class="hidden flex gap-3 overflow-hidden pb-2 scroll-smooth hide-scrollbar py-2 rounded-[28px]">
-        <!-- Home server cards -->
-      </div>
+        </div>
       <button id="home-server-next" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full neu-btn hidden flex items-center justify-center">
         <span class="material-symbols-outlined text-[24px]">chevron_right</span>
       </button>
@@ -1512,8 +1501,7 @@
     </div>
     <div id="home-news-body" class="relative">
       <div id="home-news-list" class="flex flex-col gap-4">
-        <!-- News items (vertical) -->
-      </div>
+        </div>
       <div id="home-news-loading" class="hidden">
         <div class="flex items-center justify-center py-6">
           <div class="neu2-loader">
@@ -1548,7 +1536,7 @@
 
   
 </div>
-<!-- Modpacks View -->
+<!-- modpackler -->
 <div id="view-modpacks" class="page-pane hidden absolute inset-0 pt-20 px-8 pb-8 overflow-y-auto z-0 titlebar-no-drag">
   <div class="flex flex-col gap-4 mb-6">
     <div class="flex items-center justify-between page-ui">
@@ -1580,17 +1568,15 @@
     </div>
   </div>
   <div id="modpacks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-24 pb-12">
-      <!-- Modpack cards inserted here by renderer.js -->
   </div>
 </div>
 
-<!-- Settings View -->
+<!-- ayarlar -->
 <div id="view-settings" class="page-pane hidden absolute inset-0 pt-20 px-8 pb-8 overflow-y-auto z-20 titlebar-no-drag">
   <div class="max-w-3xl mx-auto neu-settings-box p-8 mt-4 page-ui">
     <h2 class="font-headline-md text-3xl font-bold text-on-surface mb-6">Settings</h2>
     
     <div class="flex flex-col gap-6">
-       <!-- Launcher Password -->
        <div>
          <label class="block font-bold text-on-surface mb-2">Launcher Password</label>
          <p class="text-sm text-on-surface-variant mb-2">Require a password to access the launcher (Leave empty to disable).</p>
@@ -1599,7 +1585,6 @@
          </div>
        </div>
 
-       <!-- Modpack JSON URLs -->
        <div>
          <label class="block font-bold text-on-surface mb-2">Modpack Catalog URLs</label>
          <p class="text-sm text-on-surface-variant mb-2">Add URLs containing modpacks catalog definitions. One URL per line.</p>
@@ -1608,7 +1593,6 @@
          </div>
        </div>
 
-       <!-- Custom Java Args -->
        <div>
          <label class="block font-bold text-on-surface mb-2">Custom Java Arguments</label>
          <p class="text-sm text-on-surface-variant mb-2">Extra JVM flags when starting the game.</p>
@@ -1617,43 +1601,39 @@
          </div>
        </div>
 
-       <!-- Game Console Logs -->
        <div>
-         <label class="block font-bold text-on-surface mb-2">Oyun Konsolu (Game Console)</label>
-         <p class="text-sm text-on-surface-variant mb-2">Isaretlerseniz oyun baslatilirken tum Java ciktisi ve hatalarinin akitildigi ayri bir konsol penceresi acilir. Oyun acilmiyorsa ("Minecraft closed." hatasi) burayi acip tekrar deneyin, gercek hatayi loglarda goreceksiniz.</p>
+         <label class="block font-bold text-on-surface mb-2">Game Console</label>
+         <p class="text-sm text-on-surface-variant mb-2">When enabled, a separate console window opens at launch showing all Java output and errors. If the game won't start ("Minecraft closed." error), enable this and retry to see the real error in the logs.</p>
          <label class="flex items-center gap-3 cursor-pointer select-none">
            <span class="neu-switch-box">
              <input id="setting-open-console" type="checkbox"/>
              <span class="neu-switch-track"><span class="neu-switch-knob"><span class="neu-switch-led"></span></span></span>
            </span>
-           <span class="text-on-surface">Baslatma sirasinda konsol penceresi ac</span>
+           <span class="text-on-surface">Open a console window at launch</span>
          </label>
        </div>
 
-       <!-- Free Panorama -->
        <div>
          <label class="block font-bold text-on-surface mb-2">Free Panorama</label>
-         <p class="text-sm text-on-surface-variant mb-2">Isaretlerseniz panorama kendinden donmeyi birakir ve kamera mouse ibresiyle kontrol edilir. Mouse'u saga sola hareket ettirdikce yatay, yukari asagi hareket ettirdikce dikey donus saglanir.</p>
+         <p class="text-sm text-on-surface-variant mb-2">When enabled, the panorama stops auto-rotating and the camera follows the mouse. Move the mouse left and right for horizontal rotation, up and down for vertical.</p>
          <label class="flex items-center gap-3 cursor-pointer select-none">
            <span class="neu-switch-box">
              <input id="setting-free-panorama" type="checkbox"/>
              <span class="neu-switch-track"><span class="neu-switch-knob"><span class="neu-switch-led"></span></span></span>
            </span>
-           <span class="text-on-surface">Serbest panorama (mouse ile kamera kontrolu)</span>
+           <span class="text-on-surface">Free panorama (mouse camera control)</span>
          </label>
        </div>
 
-       <!-- Panorama Darkness -->
        <div>
-         <label class="block font-bold text-on-surface mb-2">Panorama Karartma (Darkness)</label>
-         <p class="text-sm text-on-surface-variant mb-2">Arka plandaki panorama efektinin koyuluk oranini ayarlar.</p>
+         <label class="block font-bold text-on-surface mb-2">Panorama Darkness</label>
+         <p class="text-sm text-on-surface-variant mb-2">Controls how dark the background panorama effect is.</p>
          <div class="flex items-center gap-3">
            <input id="setting-panorama-dim" type="range" min="0" max="100" value="75" class="neu-slider"/>
            <span id="setting-panorama-dim-value" class="font-label-sm text-primary font-bold w-10 text-right">75%</span>
          </div>
        </div>
 
-       <!-- Server List JSON URL -->
        <div>
          <label class="block font-bold text-on-surface mb-2">Server List JSON URL</label>
          <p class="text-sm text-on-surface-variant mb-2">Enter the URL for the server list JSON. This will be used for the multiplayer server browser.</p>
@@ -1662,7 +1642,6 @@
          </div>
        </div>
 
-       <!-- CurseForge Proxy URL -->
        <div>
          <label class="block font-bold text-on-surface mb-2">CurseForge API Proxy URL</label>
          <p class="text-sm text-on-surface-variant mb-2">Enter the Cloudflare Worker URL for proxying CurseForge requests.</p>
@@ -1671,7 +1650,6 @@
          </div>
        </div>
 
-       <!-- Save Button -->
        <div class="flex justify-end mt-4">
           <button id="btn-save-settings" class="px-6 py-3 rounded-xl bg-gradient-to-b from-primary-container to-inverse-primary text-white font-bold hover:shadow-[0_0_15px_rgba(75,142,255,0.4)] transition-all">
              Save Changes
@@ -1681,7 +1659,7 @@
   </div>
 </div>
 
-<!-- Multiplayer View -->
+<!-- coklu oyuncu -->
 <div id="view-multiplayer" class="page-pane hidden absolute inset-0 pt-20 px-8 pb-8 overflow-y-auto z-0 titlebar-no-drag">
   <div class="flex flex-col gap-4 mb-6">
     <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 page-ui">
@@ -1715,7 +1693,7 @@
     </div>
   </div>
   <div id="multiplayer-grid" class="grid grid-cols-1 gap-4 mb-6 pb-2">
-      <!-- Servers inserted here -->
+      <!-- sunucular buraya eklenir -->
   </div>
   <div class="neu-bar-box flex items-center justify-between gap-3 flex-wrap mt-auto mb-24 pb-12 titlebar-no-drag page-ui">
       <button id="btn-mp-prev" class="neu-page-btn flex items-center gap-2 opacity-50 cursor-not-allowed">
@@ -1728,7 +1706,7 @@
   </div>
 </div>
 
-<!-- Lock Screen View -->
+<!-- kilit ekrani -->
 <div id="view-lock" class="hidden fixed inset-0 z-[100] modal-backdrop flex-col items-center justify-center titlebar-no-drag">
    <div class="glass-card rounded-2xl p-8 w-full max-w-sm mx-4 border border-white/10 shadow-2xl text-center">
       <span class="material-symbols-outlined text-primary text-[48px] mb-4">lock</span>
@@ -1740,7 +1718,7 @@
    </div>
 </div>
 
-<!-- Bottom right contextual info -->
+<!-- sag altta durum bilgisi -->
 <div id="status-panel" data-state="idle" class="absolute bottom-8 right-8 p-4 pl-6 max-w-[300px] hidden md:block z-10 titlebar-no-drag">
 <div class="status-accent absolute left-3 top-1/2 -translate-y-1/2 w-1.5 h-10 rounded-full"></div>
 <h3 class="font-bold text-on-surface mb-1 flex items-start gap-2">
@@ -1757,7 +1735,7 @@
       </main>
     </div>
 
-<!-- Account Modal -->
+<!-- hesap penceresi -->
 <div id="account-modal" class="hidden fixed inset-0 z-50 modal-backdrop items-center justify-center titlebar-no-drag">
 <div class="neu-modal-box p-8 w-full max-w-md mx-4">
 <div class="flex items-center justify-between mb-6">
@@ -1777,7 +1755,7 @@
 </div>
 </div>
 
-<!-- Version Modal -->
+<!-- surum penceresi -->
 <div id="version-modal" class="hidden fixed inset-0 z-50 modal-backdrop items-center justify-center titlebar-no-drag">
 <div class="neu-modal-box p-8 w-full max-w-lg mx-4">
 <div class="flex items-center justify-between mb-6">
@@ -1803,7 +1781,7 @@
 </div>
 </div>
 
-<!-- Modpack Version Modal -->
+<!-- modpack surum penceresi -->
 <div id="mp-version-modal" class="hidden fixed inset-0 z-50 modal-backdrop items-center justify-center titlebar-no-drag">
 <div class="glass-card rounded-2xl p-6 w-full max-w-lg mx-4 border border-white/10 shadow-2xl">
 <div class="flex items-center justify-between mb-6">

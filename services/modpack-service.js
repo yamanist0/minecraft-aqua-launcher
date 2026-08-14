@@ -104,8 +104,7 @@ class ModpackService {
     const fileStream = fs.createWriteStream(destPath);
     
     return new Promise((resolve, reject) => {
-      // For Node fetch, body is a ReadableStream which can be piped differently in Node 18
-      // If we use res.body.pipe, we have to use stream.Readable.fromWeb
+      // node 18'de res.body bir ReadableStream, fromWeb ile pipe etmek gerek
       const { Readable } = require('stream');
       const readable = Readable.fromWeb(res.body);
       
@@ -122,7 +121,6 @@ class ModpackService {
     
     this.isDownloading = true;
     try {
-      // 1. Fetch the remote modpack json to get mods list
       this.sendEvent('modpack-status', { state: 'preparing', message: 'Fetching modpack details...' });
       
       let modsData = {};
@@ -134,7 +132,7 @@ class ModpackService {
             try {
               modsData = JSON.parse(text);
             } catch (jsonErr) {
-              // Try to recover from malformed JSON arrays
+              // bozuk json dizilerinden kurtarma dene
               const recoveredUrls = this.extractStringArrayFromJsonLikeText(text);
               if (recoveredUrls.length > 0) {
                 modsData = recoveredUrls;
@@ -145,8 +143,7 @@ class ModpackService {
          }
       }
 
-      // Format could be array of strings, or key-value
-      // Let's assume the json returns an array of URL strings: [ "https://abc.jar", "https://modrinth.com/mod/sodium" ]
+      // json ya string dizisi ya da { mods: [...] } formatinda olabilir
       let modUrls = [];
       if (Array.isArray(modsData)) {
           modUrls = modsData;
@@ -163,7 +160,7 @@ class ModpackService {
         modUrls = modpackData.urls;
       }
 
-      // If no mod URLs specified, just mark as installed?
+      // mod url'si yoksa pack'i kurulmus say
       if (!modUrls || modUrls.length === 0) {
          console.warn('No mod URLs found for pack', packId, modpackData);
          this.manifest[packId] = {
@@ -175,7 +172,7 @@ class ModpackService {
          return;
       }
 
-      // Check current version installed
+      // ayni surum kuruluysa sadece aktiflestir
       const installedInfo = this.manifest[packId];
       if (installedInfo && installedInfo.version === modpackData.version && !force) {
          this.sendEvent('modpack-status', { state: 'preparing', message: 'Activating existing modpack...' });
@@ -202,7 +199,6 @@ class ModpackService {
       const selectedLoader = String(modpackData.loader || '').toLowerCase();
       const selectedMcVersion = String(modpackData.mcVersion || '').trim();
 
-      // Simple concurrency loop using chunks
       const concurrency = 3;
       for (let i = 0; i < modUrls.length; i += concurrency) {
          const chunk = modUrls.slice(i, i + concurrency);
@@ -213,17 +209,15 @@ class ModpackService {
                   finalUrl = await resolveModrinthLink(url, selectedMcVersion, selectedLoader);
                }
                
-               // Extract filename
                let fileName = finalUrl.substring(finalUrl.lastIndexOf('/') + 1);
                if (!fileName.endsWith('.jar')) fileName += '.jar';
-               // Clean query params if any
                fileName = fileName.split('?')[0];
 
                const destPath = path.join(packModsDir, fileName);
                await this.downloadFile(finalUrl, destPath);
             } catch (err) {
                console.error(`Failed to download ${url}`, err);
-               // Continuing other downloads even if one fails
+               // biri patlarsa digerleri devam etsin
             }
 
             completedCount++;
@@ -235,7 +229,6 @@ class ModpackService {
          }));
       }
 
-      // Update manifest
       this.manifest[packId] = {
         version: modpackData.version,
         folder: this.normalizePackId(packId),
@@ -262,7 +255,7 @@ class ModpackService {
     return this.installModpack(packId, modpackData, true);
   }
 
-  // ─── Modrinth .mrpack Install ────────────────────────────────────
+  // modrinth .mrpack kurulumu
   async installMrpackPack(packId, versionData, meta) {
     if (this.isDownloading) throw new Error('A download is already in progress');
     this.isDownloading = true;
@@ -304,7 +297,7 @@ class ModpackService {
     }
   }
 
-  // ─── CurseForge .zip Install ─────────────────────────────────────
+  // curseforge .zip kurulumu
   async installCfPack(packId, fileData, proxyBaseUrl, meta) {
     if (this.isDownloading) throw new Error('A download is already in progress');
     this.isDownloading = true;

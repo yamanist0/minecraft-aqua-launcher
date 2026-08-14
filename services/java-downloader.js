@@ -11,7 +11,7 @@ function getOs() {
 function getArch() {
   if (process.arch === 'x64') return 'x64';
   if (process.arch === 'arm64') return 'aarch64';
-  return 'x64'; // fallback
+  return 'x64';
 }
 
 async function downloadJava(version, mcRoot, sendEvent) {
@@ -19,7 +19,6 @@ async function downloadJava(version, mcRoot, sendEvent) {
   const arch = getArch();
   const imageType = 'jdk';
 
-  // Find latest release URL
   const response = await fetch(
     `https://api.adoptium.net/v3/assets/latest/${version}/hotspot?os=${os}&architecture=${arch}&image_type=${imageType}`
   );
@@ -41,7 +40,7 @@ async function downloadJava(version, mcRoot, sendEvent) {
   const destZipPath = path.join(runtimesDir, fileName);
   const extractFolder = path.join(runtimesDir, `java-${version}`);
 
-  // Detect if already downloaded globally (avoid redundant queries)
+  // daha once indirildiyse atla
   const findExecutable = (dir) => {
     if (!fs.existsSync(dir)) return null;
     const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -60,10 +59,9 @@ async function downloadJava(version, mcRoot, sendEvent) {
 
   const existingExec = findExecutable(extractFolder);
   if (existingExec) {
-    return existingExec; // Return cached instance mapped to this directory
+    return existingExec;
   }
 
-  // Download
   sendEvent('launch-status', { state: 'preparing', message: `Downloading Java ${version} (${(data[0].binary.package.size / 1024 / 1024).toFixed(1)} MB)...` });
   
   const binResponse = await fetch(binaryPackageUrl);
@@ -74,7 +72,6 @@ async function downloadJava(version, mcRoot, sendEvent) {
   const arrayBuffer = await binResponse.arrayBuffer();
   fs.writeFileSync(destZipPath, Buffer.from(arrayBuffer));
 
-  // Extract
   sendEvent('launch-status', { state: 'preparing', message: `Extracting Java ${version}...` });
   
   if (fileName.endsWith('.zip')) {

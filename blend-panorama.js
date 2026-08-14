@@ -1,7 +1,4 @@
-// yan yuzlerin dikiş kenarlarini yatay cross-fade ile birbirine karistirir
-// kaynaşma bandi ucgen seklindedir: en ust satirda 30px, ortada 15px, en altta 0px
-// soldaki gorsel bandin 3/5'ini, sagdaki 2/5'ini alir (60/40 dagilim)
-// sonuc 3d kupun dikiş hatlarindaki ince kararti/cizgi kaybolur
+// panoramanin dikiş kenarlarini cross-fade ile karistirir, dikiş izi kaybolur
 const fs = require('fs');
 const path = require('path');
 const { PNG } = require('pngjs');
@@ -9,8 +6,7 @@ const { PNG } = require('pngjs');
 const DIR = path.join(__dirname, 'assets', 'panorama');
 const BACKUP_DIR = path.join(DIR, '_original');
 
-// kup duzeni: front(1) right(2) back(3) left(0) sonra front(1)'e doner
-// her cift [soldaki dosya, sagdaki dosya]
+// kup duzeni: left(0) front(1) right(2) back(3); ciftler [sol, sag]
 const SEAMS = [
     ['panorama_1.png', 'panorama_2.png'],
     ['panorama_2.png', 'panorama_3.png'],
@@ -44,8 +40,7 @@ function copyFile(src, dst) {
 }
 
 function maxEdgeDelta(a, b, rows) {
-    // dikiş hattindaki en buyuk renk farki (once -> sonra karsilastirma icin)
-    // rows: sadece belirli satirlari taramak icin [bas, son) ya da null = hepsi
+    // dikiş hattindaki en buyuk renk farki; rows = [bas, son) satir araligi ya da null
     const w = a.width;
     const h = a.height;
     const yStart = rows ? rows[0] : 0;
@@ -133,7 +128,7 @@ if (!fs.existsSync(BACKUP_DIR)) {
     console.log('yedekler alindi:', BACKUP_DIR);
 }
 
-// once dikiş farkini raporla (kusadik bölgenin ust yarisi)
+// once dikiş farkini raporla (ust yari)
 const before = {};
 for (const [l, r] of SEAMS) {
     before[l + '|' + r] = maxEdgeDelta(load(l), load(r), [0, 512]);

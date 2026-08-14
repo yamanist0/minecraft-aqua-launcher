@@ -28,13 +28,13 @@ contextBridge.exposeInMainWorld('launcherAPI', {
   getNews: (page) => ipcRenderer.invoke('launcher:get-news', page),
   showWindow: () => ipcRenderer.invoke('launcher:show-window'),
 
-  // ─── Modrinth ────────────────────────────────────────────────────
+  // modrinth
   searchModrinth: (query, facets, offset, limit) => ipcRenderer.invoke('launcher:search-modrinth', query, facets, offset, limit),
   getModrinthProject: (idOrSlug) => ipcRenderer.invoke('launcher:get-modrinth-project', idOrSlug),
   getModrinthVersions: (projectId, loaders, gameVersions) => ipcRenderer.invoke('launcher:get-modrinth-versions', projectId, loaders, gameVersions),
   installMrpack: (packId, versionData, meta) => ipcRenderer.invoke('launcher:install-mrpack', packId, versionData, meta),
 
-  // ─── CurseForge ──────────────────────────────────────────────────
+  // curseforge
   searchCurseForge: (query, proxyBaseUrl, index, pageSize) => ipcRenderer.invoke('launcher:search-curseforge', query, proxyBaseUrl, index, pageSize),
   getCurseForgeProject: (modId, proxyBaseUrl) => ipcRenderer.invoke('launcher:get-curseforge-project', modId, proxyBaseUrl),
   getCurseForgeFiles: (modId, proxyBaseUrl) => ipcRenderer.invoke('launcher:get-curseforge-files', modId, proxyBaseUrl),

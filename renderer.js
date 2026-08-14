@@ -145,11 +145,7 @@ function revealSlideLeft(container, delayStep = 40, initialDelay = 30) {
   });
 }
 
-/**
- * Fade-in and slide-up all static `.page-ui` elements inside `viewId`.
- * Call this after switching to a view. Elements are reset first so
- * they replay the animation on every navigation.
- */
+// viewId icindeki .page-ui elemanlarini fade + yukari kayma ile goster
 function revealPageUI(viewId, baseDelay = 30, stepDelay = 40) {
   const view = $(viewId);
   if (!view) return;
@@ -351,11 +347,11 @@ function showHomeLoading(section, loading) {
   const prev = $(`home-${section}-prev`);
   const next = $(`home-${section}-next`);
 
-  // Always hide the old spinner — skeleton cards replace it
+  // eski spinner gizle, skeleton kartlar onun yerini aldi
   if (loader) loader.classList.add('hidden');
-  // Scroller is always visible (skeleton cards shown during load, real cards after)
+  // scroller her zaman gorunur
   if (scroller) scroller.classList.remove('hidden');
-  // Hide nav arrows while loading
+  // yukleme sirasinda oklari gizle
   if (prev) prev.classList.toggle('hidden', loading);
   if (next) next.classList.toggle('hidden', loading);
 }
@@ -405,11 +401,11 @@ async function loadHomeModpackCarousel() {
   try {
     let combined = [];
 
-    // 1. Installed
+    // 1. kurulu packler
     const installed = Object.values(state.installedModpacks || {});
     combined.push(...installed.map(p => ({ ...p, source: 'installed' })));
 
-    // 2. Catalog
+    // 2. katalog
     try {
       const urls = state.settings?.modpackUrls || ['https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/modpacks.json'];
       for (const u of urls) {
@@ -425,7 +421,7 @@ async function loadHomeModpackCarousel() {
       console.error('Failed fetching home catalog:', e);
     }
 
-    // 3. CurseForge (Search popular empty query)
+    // 3. curseforge populer packler
     try {
       const proxyBaseUrl = state.settings?.curseforgeProxyUrl;
       const cfData = await window.launcherAPI.searchCurseForge('', proxyBaseUrl || '');
@@ -442,7 +438,7 @@ async function loadHomeModpackCarousel() {
       }
     } catch (e) {}
 
-    // 4. Modrinth (Search popular empty query)
+    // 4. modrinth populer packler
     try {
       const mrData = await window.launcherAPI.searchModrinth('', []);
       if (mrData && mrData.hits) {
@@ -458,7 +454,7 @@ async function loadHomeModpackCarousel() {
       }
     } catch (e) {}
 
-    // Deduplicate and trim to max 20
+    // tekrarlari ayikla, en fazla 20'ye dusur
     const seen = new Set();
     const finalPacks = [];
     for (const p of combined) {
@@ -512,7 +508,7 @@ async function loadHomeData() {
   }
 }
 
-// News rendering: vertical infinite list with mixed layouts
+// haberler: sonsuz liste, karisik duzenler
 function renderHomeNewsAppend(items) {
   const container = $('home-news-list');
   if (!container) return;
@@ -527,11 +523,10 @@ function renderHomeNewsAppend(items) {
     const desc = String(it.description || '');
     const isLong = desc.length > 220 || (it.title && it.title.length > 120);
 
-    // helper to get image
     const getImage = (o) => (o && (o.image || o.thumbnail || o.imageUrl || o.img)) || '';
 
     if (isLong) {
-      // full-width horizontal feature
+      // tam genislikte buyuk haber
       const card = document.createElement('div');
       card.className = 'neu-card p-4 flex flex-col md:flex-row gap-4 cursor-pointer';
       card.innerHTML = `
@@ -553,7 +548,7 @@ function renderHomeNewsAppend(items) {
       continue;
     }
 
-    // If we have at least 3 short items, render a 3-up row
+    // en az 3 kisa haber varsa 3'luk satir yap
     const nextShort = next && String(next.description || '').length <= 220;
     const next2Short = next2 && String(next2.description || '').length <= 220;
     if (nextShort && next2Short) {
@@ -583,9 +578,9 @@ function renderHomeNewsAppend(items) {
       continue;
     }
 
-    // Composite row: one large + two stacked small (if possible)
+    // 1 buyuk + 2 kucuk bir satir
     if (next && next2) {
-      // pick side randomly
+      // tarafi rastgele sec
       const sideLeft = Math.random() < 0.5;
       const row = document.createElement('div');
       row.className = 'flex gap-4';
@@ -633,7 +628,7 @@ function renderHomeNewsAppend(items) {
       continue;
     }
 
-    // Fallback single small card
+    // olmadiysa tek kucuk kart
     const img = getImage(it);
     const card = document.createElement('div');
     card.className = 'neu-card p-3 cursor-pointer';
@@ -654,7 +649,7 @@ function renderHomeNewsAppend(items) {
   }
 }
 
-// Infinite news loader state
+// sonsuz haber yukleyicinin state'i
 state.homeNewsPage = 1;
 state.homeNewsLoading = false;
 state.homeNewsEnded = false;
@@ -670,7 +665,6 @@ async function fetchNewsPage(page) {
 }
 
 async function loadHomeNews() {
-  // initialize once
   const container = $('home-news-list');
   if (!container) return;
   state.homeNewsPage = 1;
@@ -705,10 +699,10 @@ async function loadHomeNews() {
     }
   }
 
-  // load first page
+  // ilk sayfayi yukle
   await loadMore();
 
-  // set up intersection observer on sentinel inside the same scroll root
+  // sentinel'a ayni scroll root icinde intersection observer kur
   const root = $('view-home-content') || null;
   const options = { root: root, rootMargin: '600px' };
   const observer = new IntersectionObserver((entries) => {
@@ -984,7 +978,7 @@ function bindEvents() {
     openModal('version-modal');
     setLoaderTab(state.loader);
 
-    // Lock selects to loading state
+    // select'leri yukleme moduna kilitle
     const mcSelect = $('mc-version-select');
     const loaderSelect = $('loader-version-select');
     if (mcSelect) {
@@ -1008,11 +1002,9 @@ function bindEvents() {
     
     if (state.activeModpack) {
       const pack = state.activeModpack;
-      // Search all manifest entries by name match OR direct key match
       const findInstalled = () => {
-          // Direct key match
+          // modrinth/curseforge packleri benzersiz id'de sakli, isme gore de ara
           if (state.installedModpacks[pack.name]) return state.installedModpacks[pack.name];
-          // Search by name field across all entries (for modrinth/curseforge packs stored under unique IDs)
           for (const [key, val] of Object.entries(state.installedModpacks)) {
               if (val.name && val.name === pack.name) return val;
           }
@@ -1020,7 +1012,7 @@ function bindEvents() {
       };
       const installedPack = findInstalled();
       
-      // Only trigger old JSON download for catalog/json type packs that aren't installed
+      // sadece kurulmamis katalog packleri eski json indirmesine takilir
       const isNewPlatformPack = pack.type === 'modrinth' || pack.type === 'curseforge' || pack.source === 'modrinth' || pack.source === 'curseforge';
       if (!installedPack && !isNewPlatformPack) {
          try {
@@ -1213,7 +1205,7 @@ function bindEvents() {
     revealPageUI('view-settings');
   });
 
-  // Navigation events
+  // navigasyon olaylari
   $('nav-home')?.addEventListener('click', () => {
     switchView('home');
     revealPageUI('view-home-content');
@@ -1283,7 +1275,7 @@ function bindEvents() {
     scrollCarousel('home-server-scroller', 1);
   });
 
-  // News carousel controls
+  // haber carousel kontrolleri
   $('home-news-prev')?.addEventListener('click', () => scrollCarousel('home-news-scroller', -1));
   $('home-news-next')?.addEventListener('click', () => {
     const container = $('home-news-scroller');
@@ -1338,7 +1330,7 @@ function bindEvents() {
       freePanorama = !!newSettings.freePanorama;
       applyPanoramaMode();
       await window.launcherAPI.saveSettings(newSettings);
-      setStatus('Settings Saved', 'Ayarlar kaydedildi.');
+      setStatus('Settings Saved', 'Settings saved.');
       await loadHomeData();
   });
 
@@ -1357,7 +1349,7 @@ function bindEvents() {
     if (freePanorama) updatePanoramaFree();
   });
 
-  // Modpack Tabs
+  // modpack sekmeleri
   const setMpTab = (tabId) => {
      state.mpTab = tabId;
      state.mrPage = 1;
@@ -1430,7 +1422,6 @@ function updateActiveModpackUI() {
   if (!panel) return;
   if (!pack) {
     panel.classList.add('hidden');
-    // clear fields
     $('active-pack-title').textContent = '';
     $('active-pack-desc').textContent = '';
     const imgEl = $('active-pack-image');
@@ -1501,7 +1492,7 @@ async function saveVersionSelection() {
   state.settings.loaderVersion = state.loaderVersion;
   
   if (state.activeModpack) {
-      // Find the installed modpack's unique ID
+      // kurulu pack'in unique id'sini bul
       const installedKey = Object.keys(state.installedModpacks).find(
           k => state.installedModpacks[k] && state.installedModpacks[k].name === state.activeModpack.name
       );
@@ -1512,7 +1503,7 @@ async function saveVersionSelection() {
   
   if (window.launcherAPI) {
       try {
-          // Send background save without awaiting completely (to not block ui)
+          // arayuzu kilitlemesin diye beklemeden arka planda kaydet
           window.launcherAPI.saveSettings(state.settings).catch(e => console.error(e));
       } catch(e) {
           console.error('Failed to save version selection', e);
@@ -1599,7 +1590,7 @@ async function loadMultiplayerList(page = 1) {
 
   loading?.classList.remove('hidden');
   
-  // Only show skeletons if fetching takes more than 100ms
+  // fetch 100ms'yi gecerse skeleton goster
   let showSkeleton = true;
   const skelTimer = setTimeout(() => {
     if (showSkeleton) renderSkeletonMultiplayer(grid, 5);
@@ -2062,7 +2053,7 @@ async function openModpackVersionModal(platform, projectId, packName, iconUrl, d
       const uniqueId = `${platform}-${safeName}-${randomPrefix}`;
       
       try {
-         // Fake active modpack state during install
+         // kurulum sirasinda sahte aktif pack state'i goster
          state.activeModpack = {
             name: packName,
             description: description || 'Preparing to install...',
@@ -2112,7 +2103,7 @@ async function openModpackVersionModal(platform, projectId, packName, iconUrl, d
 
 async function init() {
   state.settings = await window.launcherAPI.getSettings();
-    // Ensure default CurseForge proxy URL is set if missing
+    // proxy url yoksa varsayilani ata
     if (!state.settings.curseforgeProxyUrl) {
         state.settings.curseforgeProxyUrl = 'https://patient-darkness-1364.yaman26.workers.dev/';
     }
@@ -2136,26 +2127,22 @@ async function init() {
   } else {
       await setupCore();
       if (window.launcherAPI.showWindow) await window.launcherAPI.showWindow();
-      // Animate home page static UI on first load
+      // ilk acilista home animasyonunu oynat
       revealPageUI('view-home-content');
-      // Ensure home data triggers after initial paint; call immediately and as a fallback after a short delay
+      // home verilerini hemen yukle, zamanlama sorunlarina karsi gecikmeli tekrar dene
       try { loadHomeData(); } catch (e) { console.error('loadHomeData immediate call failed', e); }
-      // fallback trigger in case of timing issues
       setTimeout(() => {
        try { loadHomeData(); } catch (e) { /* ignore */ }
       }, 250);
-      // After 1s, if the user is already seeing the home view, simulate a Home button press
+      // 1 sn sonra hala home gorunuyorsa home tusuna basmayi simule et
       setTimeout(() => {
         try {
           const homeView = $('view-home-content');
           if (homeView && !homeView.classList.contains('hidden')) {
             const navHome = $('nav-home');
             console.debug('Delayed startup: simulating Home button press');
-            // Also print the home view content for debugging as requested
-            try { console.debug('view-home-content innerHTML:', homeView.innerHTML); } catch (e) { /* ignore */ }
             if (navHome) navHome.click();
             else {
-              // fallback: call the same handlers directly
               switchView('home');
               loadHomeData();
             }
@@ -2176,10 +2163,10 @@ async function setupCore() {
   const dim = savedDim != null ? savedDim : 75;
   if (dimSlider) dimSlider.value = String(dim);
   applyPanoramaDim(dim);
-  // attach deselect button for active pack
+  // aktif pack kaldirma butonunu bagla
   $('active-pack-close')?.addEventListener('click', () => clearActiveModpack());
 
-  // home section show/hide toggles
+  // home bolumlerini ac/kapa togglari
   const sectionToggles = [
     ['toggle-home-modpacks', 'home-modpack-body'],
     ['toggle-home-servers', 'home-server-body'],
@@ -2202,7 +2189,7 @@ async function setupCore() {
   state.account = await window.launcherAPI.getAccount();
   state.installedModpacks = await window.launcherAPI.getInstalledModpacks();
   
-  // Restore modpack and version selections
+  // kayitli pack ve surum secimlerini geri yukle
   if (state.settings?.activeModpackId) {
      const savedId = state.settings.activeModpackId;
      const pack = state.installedModpacks[savedId] || Object.values(state.installedModpacks).find(p => p.name === savedId);
@@ -2220,10 +2207,10 @@ async function setupCore() {
   updateAccountUI();
   await updateVersionUI();
   setStatus(
-    state.account ? 'Ready to launch' : "Aqua Launcher'a hoş geldiniz",
+    state.account ? 'Ready to launch' : 'Welcome to Aqua Launcher',
     state.account
       ? `${$('version-label').textContent} selected.`
-      : 'Hoş geldiniz! Ayarlar bölümünden sunucu JSON adresini değiştirebilirsiniz.',
+      : 'Welcome! You can change the server list URL from the settings menu.',
   );
   await loadHomeData();
 }

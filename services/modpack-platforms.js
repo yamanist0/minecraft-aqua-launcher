@@ -4,11 +4,8 @@ const crypto = require('crypto');
 const AdmZip = require('adm-zip');
 const { app } = require('electron');
 
-// ─── Constants ───────────────────────────────────────────────────────
 const MODRINTH_API = 'https://api.modrinth.com/v2';
 const MODRINTH_USER_AGENT = 'AquaLauncher/1.0 (https://github.com/Yaman-the-coder/aqua-launcher)';
-
-// ─── Helpers ─────────────────────────────────────────────────────────
 
 async function modrinthFetch(pathname) {
   const url = `${MODRINTH_API}${pathname}`;
@@ -77,7 +74,6 @@ async function downloadToFile(url, destPath) {
 async function downloadFileWithHash(url, destPath, expectedHashes) {
   const buffer = await downloadToBuffer(url);
 
-  // Verify hashes if provided
   if (expectedHashes) {
     if (expectedHashes.sha512) {
       const actual = crypto.createHash('sha512').update(buffer).digest('hex');
@@ -121,14 +117,13 @@ function readJsonFromZip(zipPath, jsonFilePath) {
   return JSON.parse(entry.getData().toString('utf8'));
 }
 
-// ─── Modrinth API ────────────────────────────────────────────────────
+// Modrinth API
 
 async function searchModrinth(query, facets, offset = 0, limit = 20) {
   const params = new URLSearchParams();
   params.set('query', query);
   params.set('limit', limit.toString());
   params.set('offset', offset.toString());
-  // Filter for modpacks project type
   const allFacets = [['project_type:modpack']];
   if (facets) allFacets.push(...facets);
   params.set('facets', JSON.stringify(allFacets));
@@ -155,7 +150,6 @@ async function installMrpack(versionData, packId, mcRoot, sendEvent) {
   fs.mkdirSync(tempDir, { recursive: true });
 
   try {
-    // 1. Find the primary .mrpack file in versionData.files
     const mrpackFile = (versionData.files || []).find(f => f.primary) || versionData.files?.[0];
     if (!mrpackFile || !mrpackFile.url) {
       throw new Error('No .mrpack file found in version data');
@@ -163,23 +157,19 @@ async function installMrpack(versionData, packId, mcRoot, sendEvent) {
 
     sendEvent('modpack-status', { state: 'downloading', message: 'Downloading modpack archive...', progress: { completed: 0, total: 1 } });
 
-    // 2. Download the .mrpack file
     const mrpackPath = path.join(tempDir, mrpackFile.filename || 'modpack.mrpack');
     await downloadToFile(mrpackFile.url, mrpackPath);
 
-    // 3. Parse modrinth.index.json from the archive
     const metadata = readJsonFromZip(mrpackPath, 'modrinth.index.json');
     if (!metadata) {
       throw new Error('Invalid .mrpack: missing modrinth.index.json');
     }
 
-    // 4. Prepare destination
     if (fs.existsSync(packModsDir)) {
       fs.rmSync(packModsDir, { recursive: true, force: true });
     }
     fs.mkdirSync(packModsDir, { recursive: true });
 
-    // 5. Download each mod file from the metadata
     const files = metadata.files || [];
     const total = files.length;
     let completed = 0;
@@ -202,7 +192,6 @@ async function installMrpack(versionData, packId, mcRoot, sendEvent) {
             return;
           }
 
-          // file.path is relative, e.g. "mods/sodium.jar"
           const destPath = path.join(packDir, file.path);
           fs.mkdirSync(path.dirname(destPath), { recursive: true });
 
@@ -220,38 +209,36 @@ async function installMrpack(versionData, packId, mcRoot, sendEvent) {
       }));
     }
 
-    // 6. Extract overrides
     sendEvent('modpack-status', { state: 'preparing', message: 'Installing overrides...' });
 
-    // Modrinth supports both "overrides" and "client-overrides"
+    // hem overrides hem client-overrides destegi var
     extractOverrides(mrpackPath, 'overrides', packDir);
     extractOverrides(mrpackPath, 'client-overrides', packDir);
 
-    // 7. Return metadata for manifest storage
     return {
       name: metadata.name || packId,
       dependencies: metadata.dependencies || {},
       fileCount: total,
     };
   } finally {
-    // Cleanup temp
+    // temp'i sil
     try {
       fs.rmSync(tempDir, { recursive: true, force: true });
     } catch {}
   }
 }
 
-// ─── CurseForge API (via Cloudflare Workers proxy) ───────────────────
+// CurseForge API (cloudflare worker proxy uzerinden)
 
 async function searchCurseForge(query, proxyBaseUrl, index = 0, pageSize = 20) {
-  // gameId 432 = Minecraft, classId 4471 = Modpacks
+  // gameId 432 = minecraft, classId 4471 = modpacklar
   const params = new URLSearchParams();
   params.set('gameId', '432');
   params.set('classId', '4471');
   params.set('searchFilter', query);
   params.set('pageSize', pageSize.toString());
   params.set('index', index.toString());
-  params.set('sortField', '2'); // Popularity
+  params.set('sortField', '2'); // popularite
   params.set('sortOrder', 'desc');
   return cfProxyFetch(proxyBaseUrl, `/v1/mods/search?${params.toString()}`);
 }
@@ -276,7 +263,6 @@ async function installCurseForgePack(fileData, packId, mcRoot, proxyBaseUrl, sen
   fs.mkdirSync(tempDir, { recursive: true });
 
   try {
-    // 1. Download the modpack .zip
     const downloadUrl = fileData.downloadUrl;
     if (!downloadUrl) {
       throw new Error('CurseForge file has no download URL (distribution denied). Please download it manually.');
@@ -287,19 +273,16 @@ async function installCurseForgePack(fileData, packId, mcRoot, proxyBaseUrl, sen
     const zipPath = path.join(tempDir, fileData.fileName || 'modpack.zip');
     await downloadToFile(downloadUrl, zipPath);
 
-    // 2. Read manifest.json from the zip
     const manifest = readJsonFromZip(zipPath, 'manifest.json');
     if (!manifest) {
       throw new Error('Invalid CurseForge modpack: missing manifest.json');
     }
 
-    // 3. Prepare destination
     if (fs.existsSync(packModsDir)) {
       fs.rmSync(packModsDir, { recursive: true, force: true });
     }
     fs.mkdirSync(packModsDir, { recursive: true });
 
-    // 4. Resolve mod file download URLs via CurseForge API
     const modFiles = manifest.files || [];
     const fileIds = modFiles.map(f => f.fileID);
     const total = fileIds.length;
@@ -309,7 +292,7 @@ async function installCurseForgePack(fileData, packId, mcRoot, proxyBaseUrl, sen
       message: 'Resolving mod download URLs...',
     });
 
-    // Fetch file info in batches of 50
+    // dosya bilgileri 50'lik gruplar halinde cekilir
     let resolvedFiles = [];
     for (let i = 0; i < fileIds.length; i += 50) {
       const batch = fileIds.slice(i, i + 50);
@@ -321,7 +304,6 @@ async function installCurseForgePack(fileData, packId, mcRoot, proxyBaseUrl, sen
       }
     }
 
-    // 5. Download each mod
     let completed = 0;
     const distributionDenied = [];
 
@@ -342,7 +324,7 @@ async function installCurseForgePack(fileData, packId, mcRoot, proxyBaseUrl, sen
           }
 
           const fileName = file.fileName || `mod-${file.id}.jar`;
-          // Determine target subfolder: resourcepacks for .zip, mods for .jar
+          // .zip resourcepacks'e, digerleri mods'a iner
           const ext = path.extname(fileName).toLowerCase();
           const subDir = ext === '.zip' ? 'resourcepacks' : 'mods';
           const destDir = path.join(packDir, subDir);
@@ -363,13 +345,11 @@ async function installCurseForgePack(fileData, packId, mcRoot, proxyBaseUrl, sen
       }));
     }
 
-    // 6. Extract overrides
     sendEvent('modpack-status', { state: 'preparing', message: 'Installing overrides...' });
 
     const overridesDir = manifest.overrides || 'overrides';
     extractOverrides(zipPath, overridesDir, packDir);
 
-    // 7. Return metadata
     return {
       name: manifest.name || packId,
       mcVersion: manifest.minecraft?.version,
@@ -383,8 +363,6 @@ async function installCurseForgePack(fileData, packId, mcRoot, proxyBaseUrl, sen
     } catch {}
   }
 }
-
-// ─── Exports ─────────────────────────────────────────────────────────
 
 module.exports = {
   // Modrinth

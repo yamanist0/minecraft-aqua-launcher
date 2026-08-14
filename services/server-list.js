@@ -87,7 +87,7 @@ async function resolveServer(address) {
       return { host: records[0].name, port: records[0].port };
     }
   } catch {
-    // Use default port.
+    // srv yoksa varsayilan port
   }
 
   return { host, port };
@@ -154,7 +154,7 @@ async function pingServer(address) {
           return;
         }
       } catch {
-        // Wait for more data.
+        // daha fazla veri gelmesini bekle
       }
     });
   });

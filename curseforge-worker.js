@@ -1,22 +1,6 @@
-/**
- * CurseForge API Proxy - Cloudflare Worker
- * 
- * KURULUM TALİMATLARI (Cloudflare Dashboard üzerinden):
- * 1. Cloudflare hesabınıza giriş yapın ve "Workers & Pages" sekmesine gidin.
- * 2. "Create application" -> "Create Worker" butonuna tıklayın.
- * 3. Worker'a bir isim verin (örn: aqua-cf-proxy) ve "Deploy"a tıklayın.
- * 4. Başarıyla oluştuktan sonra "Edit code" butonuna basın.
- * 5. Bu dosyadaki tüm kodları kopyalayıp oradaki editöre yapıştırın.
- * 6. "Save and deploy" butonuna basarak kodu kaydedin.
- * 7. Worker'ınızın ayarlarına gidin (Settings -> Variables).
- * 8. "Environment Variables" altında "Add variable" tıklayın.
- * 9. Variable name (Değişken adı) olarak: CF_API_KEY girin.
- * 10. Value (Değer) kısmına CurseForge'dan aldığınız API anahtarınızı yapıştırın. 
- * 11. "Deploy" veya "Save" diyerek değişkenleri kaydedin.
- * 12. Worker'ınıza atanan URL'yi (örn: https://aqua-cf-proxy.yaman.workers.dev) kopyalayın.
- * 13. Aqua Launcher ayarlarındaki "CurseForge API Proxy URL" alanına bu URL'yi yapıştırın!
- */
-
+// curseforge api proxy (cloudflare worker)
+// kurulum: yeni worker ac, bu kodu yapistir, env'e CF_API_KEY ekle,
+// launcher ayarlarina worker url'sini yaz
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);

@@ -68,7 +68,7 @@ class LauncherService {
 
       this.console?.writeLine('');
       this.console?.writeLine(
-        `[INFO] Oyun kapandi. Cikis kodu: ${code === null || code === undefined ? 'bilinmiyor' : code}` +
+        `[INFO] Game closed. Exit code: ${code === null || code === undefined ? 'unknown' : code}` +
           (this.console?.logPath ? ` | Log: ${this.console.logPath}` : ''),
       );
 
@@ -76,7 +76,7 @@ class LauncherService {
         const reason = startupFailure.replace(/^\[MCLC\]:\s*/i, '').slice(0, 300);
         this.sendEvent('launch-status', {
           state: 'error',
-          message: `Minecraft acilamadi: ${reason}. Detaylar icin Ayarlar > "Oyun Konsolu" ozelligini acip tekrar deneyin.`,
+          message: `Minecraft could not start: ${reason}. Enable the "Game Console" option in Settings and try again to see the real error.`,
         });
       } else {
         this.sendEvent('launch-status', {
@@ -97,7 +97,7 @@ class LauncherService {
       if (this.recentDebugLines.length > 200) this.recentDebugLines.shift();
       this.console?.writeLine(`[MCLC] ${text}`);
     } else if (event === 'data') {
-      // Game stdout/stderr — the actual reason things break at boot.
+      // oyun ciktisi, boot'ta sorun cikan yer burasi
       this.console?.writeChunk(text);
     }
 

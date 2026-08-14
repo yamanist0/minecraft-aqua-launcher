@@ -35,10 +35,10 @@ class GameConsoleService {
     });
 
     this.writeLine('======================================================');
-    this.writeLine(`Aqua Launcher konsolu | ${new Date().toLocaleString()}`);
-    this.writeLine('Oyun baslatildiginda Java ciktisi ve hatalar burada');
-    this.writeLine('gorunur. Pencereyi kapatmak icin "exit" yazin.');
-    this.writeLine(`Log dosyasi: ${this.logPath}`);
+    this.writeLine(`Aqua Launcher console | ${new Date().toLocaleString()}`);
+    this.writeLine('Java output and errors show up here when the game starts.');
+    this.writeLine('Type "exit" to close the window.');
+    this.writeLine(`Log file: ${this.logPath}`);
     this.writeLine('======================================================');
     this.openTailWindow();
   }
@@ -51,20 +51,20 @@ class GameConsoleService {
       const bat = [
         '@echo off',
         'mode con: cols=130 lines=55',
-        'title Aqua Launcher - Oyun Konsolu',
+        'title Aqua Launcher - Game Console',
         'powershell -NoExit -NoProfile -ExecutionPolicy Bypass -Command "' + psTail + '"',
         '',
       ].join('\r\n');
       fs.writeFileSync(batPath, bat, { encoding: 'utf8' });
 
-      // `start` in cmd açar a new console window that runs the batch tail.
+      // log'u takip eden yeni bir konsol penceresi acar
       this.consoleProcess = spawn(
         'cmd.exe',
         ['/c', 'start', '', `"${batPath}"`],
         { stdio: 'ignore', windowsHide: false },
       );
     } catch (e) {
-      this.writeLine(`[Konsol] Pencere acilamadi: ${e.message}`);
+      this.writeLine(`[Console] Failed to open window: ${e.message}`);
     }
   }
 
@@ -89,7 +89,7 @@ class GameConsoleService {
   async close() {
     if (this.stream) {
       this.writeLine('');
-      this.writeLine('[Konsol] Bu oturumun log akisi bitti. Pencere acik kaliyor.');
+      this.writeLine('[Console] Stream for this session has ended. Window stays open.');
       await new Promise((resolve) => this.stream.end(resolve));
       this.stream = null;
     }

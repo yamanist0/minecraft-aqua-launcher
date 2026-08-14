@@ -179,7 +179,7 @@ async function findInstalledJava() {
       }
     }
   } catch {
-    // No java on PATH.
+    // PATH'te java yok
   }
 
   return [...discovered.values()].sort((a, b) => b.version - a.version);
