@@ -9,7 +9,7 @@
 
 <br />
 <div align="center">
-  <img src="assets/icon.svg" alt="Aqua Launcher Logo" width="120" height="120">
+  <img src="assets/logo.svg" alt="Aqua Launcher Logo" width="120" height="120">
 
   <h3 align="center">Aqua Launcher</h3>
 
