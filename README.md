@@ -5,11 +5,11 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![Unlicense License][license-shield]][license-url]
+[![MIT License][license-shield]][license-url]
 
 <br />
 <div align="center">
-  <img src="assets/icon.svg" alt="Aqua Launcher Logo" width="120" height="120">
+  <img src="assets/logo.svg" alt="Aqua Launcher Logo" width="120" height="120">
 
   <h3 align="center">Aqua Launcher</h3>
 
@@ -81,7 +81,16 @@ The core philosophy of Aqua Launcher revolves around a modular, asynchronous int
 * **Inter-Process Communication:** Preload scripts negotiate secure streams between the frontend and core framework, exposing only critical filesystem and network directives to the renderer layout.
 * **Authentication:** Integrates specialized modules for certified Microsoft Xbox Live handshakes, securely retrieving access tokens and managing encrypted offline mode environments.
 * **Dynamic Resolution:** Modrinth and CurseForge interactions are facilitated through custom Cloudflare Worker proxies to sanitize REST inputs and bypass strict CORS protocols, allowing the client to resolve manifest formats dynamically before pushing data to the localized download core.
-* **Liquid Animations:** Relies exclusively on Tailwind utility toggles interacting directly with CSS rulesets to orchestrate non-blocking scale, opacity, and transform transitions across internal navigation views without causing rigid reflow bottlenecks.
+* **Liquid Animations:** Relies exclusively on Tailwind utility toggles interacting directly with CSS rulesets to orchestrate non-blocking scale, opacity, transform, and dual-tone shadow transitions across internal navigation views without causing rigid reflow bottlenecks.
+
+### Design Language
+
+Aqua Launcher follows a strict **neomorphism (Soft UI)** language, evolved from an earlier glassmorphism treatment. Translucent blur panels were retired in favor of opaque, layered surfaces that read crisply against the panoramic backdrop.
+
+* **Soft Surfaces:** Every card, chip, toggle, and dock is raised from the `#2d2d32` base canvas using paired shadows: a dark `#1f1f23` cast on the bottom-right and a light `#3b3b41` highlight on the top-left. Interactive wells invert this energy into inset shadows, simulating physically pressed material.
+* **Aqua Accent:** A single `#87CEFA` accent tone drives focus rings, badges, progress fills, and status indicators across the interface, with a deeper `#5A9FD1` derivative shading gradient artwork.
+* **Blocky Brand Mark:** The launcher monogram is a pixelated water drop carrying a raised `A`, executed in flat geometry and identical dual-tone physics so the identity stays consistent from the sidebar to the Windows taskbar.
+* **Uniform Radii:** A consistent 22px corner radius and consistent 8px shadow extrusion geometry keep depth, elevation, and spacing predictable on every view.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -109,7 +118,7 @@ This module handles absolute fetching, localized formatting, and indexing mappin
 * **Four-Tier Architecture:** Smooth tab logic swaps the application query scope linearly across Installed Archives, Custom Catalogs, Modrinth Repositories, and the external CurseForge ecosystem.
 * **Intelligent File Scaffolding:** Engages custom unpacking algorithms utilizing `adm-zip` to extract `.mrpack` architecture arrays and standard zip layouts interchangeably on the node system.
 * **Search and Filter Dynamics:** An input detection protocol bound to native debouncing intercepts query exhaustion. This executes secure backend requests returning faceted categories immediately while preserving rigid application fluidity. 
-* **State Masking:** Unidentified, remote library nodes deploy translucent data markers. These states transfer gracefully into deterministic progress boundaries informing file manipulation phases up until installation termination transforms into standard execution nodes.
+* **State Masking:** Unidentified, remote library nodes deploy inset neumorphic wells. These states transfer gracefully into deterministic progress boundaries informing file manipulation phases up until installation termination transforms into standard execution nodes.
 
 ### Multiplayer Menu
 
@@ -197,7 +206,7 @@ Aqua Launcher relies completely onto `launcher-service.js` logic handlers which 
 
 ## License
 
-Distributed locally identifying as standard MIT architectures.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

@@ -43,6 +43,43 @@ const downloadProgress = {
 
 const $ = (id) => document.getElementById(id);
 
+const panoramaScene = () => document.querySelector('.panorama-scene');
+let panoramaMouseX = 0;
+let panoramaMouseY = 0;
+let freePanorama = false;
+
+function updatePanoramaFree() {
+  const scene = panoramaScene();
+  if (!scene || !freePanorama) return;
+  const yaw = 180 - (panoramaMouseX / window.innerWidth) * 360;
+  const pitch = ((panoramaMouseY / window.innerHeight) * 2 - 1) * 40;
+  scene.style.animation = 'none';
+  scene.style.transform = `translateZ(512px) rotateY(${yaw.toFixed(2)}deg) rotateX(${pitch.toFixed(2)}deg)`;
+}
+
+function applyPanoramaMode() {
+  const scene = panoramaScene();
+  if (!scene) return;
+  if (freePanorama) {
+    updatePanoramaFree();
+  } else {
+    scene.style.animation = '';
+    scene.style.transform = '';
+  }
+}
+
+function applyPanoramaDim(value) {
+  const overlay = document.getElementById('panorama-overlay');
+  if (!overlay) return;
+  const parsed = Number(value);
+  const dim = Number.isFinite(parsed) ? Math.max(0, Math.min(100, parsed)) : 75;
+  overlay.style.opacity = dim / 100;
+  const slider = $('setting-panorama-dim');
+  if (slider) slider.style.setProperty('--fill', `${dim}%`);
+  const valEl = $('setting-panorama-dim-value');
+  if (valEl) valEl.textContent = `${dim}%`;
+}
+
 function escapeHtml(value) {
   return String(value)
     .replace(/&/g, '&amp;')
@@ -135,24 +172,46 @@ function renderHomeModpackCarousel(modpacks) {
   container.innerHTML = '';
 
   if (!modpacks.length) {
-    container.innerHTML = '<div class="glass-card rounded-2xl p-6 min-w-[260px] text-on-surface-variant">No modpacks available. Check settings or refresh.</div>';
+    container.innerHTML = '<div class="neu-card p-6 min-w-[260px] text-on-surface-variant">No modpacks available. Check settings or refresh.</div>';
     return;
   }
+
+  const ACCENTS = [
+    ['#87CEFA', '#5A9FD1'],
+    ['#7c6ef0', '#5b4bd4'],
+    ['#3ec9b7', '#2ba394'],
+    ['#87CEFA', '#5A9FD1'],
+    ['#e88b4b', '#cf6d2f']
+  ];
 
   for (let i = 0; i < modpacks.length; i += 1) {
     const pack = modpacks[i];
     const sourceStr = pack.source ? pack.source.toUpperCase() : 'UNKNOWN';
+    const [c1, c2] = ACCENTS[i % ACCENTS.length];
+    const icon = pack.icon_url || (pack.logo && pack.logo.url) || pack.logo || pack.thumbnail || '';
+    const imgSrc = icon || 'assets/empty.png';
+    const imgErr = icon
+      ? "this.onerror=null;this.src='assets/empty.png'"
+      : "this.style.display='none'";
+    const loader = pack.modLoaders && pack.modLoaders[0] ? pack.modLoaders[0].split('-')[0] : String(pack.loader || 'fabric');
+    const mcVersion = pack.mcVersion || pack.minecraftVersion || 'Latest';
     const card = document.createElement('div');
-    card.className = 'glass-card rounded-2xl p-3 min-w-[220px] max-w-[240px] min-h-[140px] flex flex-col justify-between gap-2 hover:bg-white/10 transition-all cursor-pointer border border-white/10 slide-card';
+    card.className = 'neu-card p-3 min-w-[230px] max-w-[240px] min-h-[220px] flex flex-col justify-between gap-2 cursor-pointer slide-card';
     card.innerHTML = `
-      <div class="flex-1">
-        <h3 class="font-headline-md text-lg font-bold text-on-surface mb-1 line-clamp-2">${escapeHtml(pack.name || pack.title || pack.folder)}</h3>
-        <p class="text-[12px] text-on-surface-variant leading-snug line-clamp-3" title="${escapeHtml(pack.description || '')}">${escapeHtml(pack.description || 'No description available.')}</p>
+      <div class="neu-image h-[84px] flex-shrink-0" style="--c1:${c1};--c2:${c2}">
+        <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(pack.name || '')}" onerror="${imgErr}"/>
+        <span class="material-symbols-outlined text-[36px] text-white/90" style="font-variation-settings: 'FILL' 1;">package_2</span>
       </div>
-      <div class="flex flex-col gap-1 mt-auto text-[10px]">
-        <div class="flex justify-between items-center bg-white/5 p-1 px-2 rounded">
-           <span class="text-primary font-bold uppercase tracking-widest text-[9px]">${escapeHtml(sourceStr)}</span>
+      <div>
+        <h3 class="font-headline-md text-[15px] font-bold text-on-surface mb-1 line-clamp-2">${escapeHtml(pack.name || pack.title || pack.folder)}</h3>
+        <p class="text-[12px] text-on-surface-variant leading-snug line-clamp-2" title="${escapeHtml(pack.description || '')}">${escapeHtml(pack.description || 'No description available.')}</p>
+      </div>
+      <div class="flex items-center justify-between gap-2 mt-auto">
+        <div class="min-w-0">
+          <div class="text-[9px] text-on-surface-variant uppercase tracking-widest truncate">${escapeHtml(sourceStr)}</div>
+          <span class="text-[10px] font-bold text-primary uppercase tracking-widest truncate">${escapeHtml(loader)} · ${escapeHtml(mcVersion)}</span>
         </div>
+        <span class="neu-cta flex-shrink-0"><span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span></span>
       </div>
     `;
     card.style.transitionDelay = `${i * 45 + 50}ms`;
@@ -191,9 +250,9 @@ function renderHomeModpackCarousel(modpacks) {
   }
 
   const viewAllCard = document.createElement('div');
-  viewAllCard.className = 'glass-card rounded-2xl p-4 min-w-[220px] max-w-[240px] flex flex-col items-center justify-center gap-2 hover:bg-white/10 transition-all cursor-pointer border border-white/10 slide-card text-center';
+  viewAllCard.className = 'neu-card p-4 min-w-[220px] max-w-[240px] min-h-[220px] flex flex-col items-center justify-center gap-2 cursor-pointer slide-card text-center';
   viewAllCard.innerHTML = `
-      <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-2">
+      <div class="w-16 h-16 rounded-full neu-inset flex items-center justify-center mb-2">
          <span class="material-symbols-outlined text-[32px] text-primary">arrow_forward</span>
       </div>
       <h3 class="font-headline-md text-lg font-bold text-on-surface">View All Packs</h3>
@@ -212,29 +271,37 @@ function renderHomeServerCarousel(servers) {
   container.innerHTML = '';
 
   if (!servers.length) {
-    container.innerHTML = '<div class="glass-card rounded-2xl p-6 min-w-[260px] text-on-surface-variant">No servers available. Check settings or refresh.</div>';
+    container.innerHTML = '<div class="neu-card p-6 min-w-[260px] text-on-surface-variant">No servers available. Check settings or refresh.</div>';
     return;
   }
 
+  const ACCENTS = [
+    ['#87CEFA', '#5A9FD1'],
+    ['#7c6ef0', '#5b4bd4'],
+    ['#3ec9b7', '#2ba394'],
+    ['#87CEFA', '#5A9FD1'],
+    ['#e88b4b', '#cf6d2f']
+  ];
+
   for (let i = 0; i < servers.length; i += 1) {
     const server = servers[i];
+    const [c1, c2] = ACCENTS[i % ACCENTS.length];
+    const banner = server.banner || server.image || server.icon || '';
     const card = document.createElement('div');
-    card.className = 'glass-card rounded-2xl p-3 min-w-[220px] max-w-[240px] min-h-[80px] max-h-[200px] flex flex-col justify-between gap-1 hover:bg-white/10 transition-all cursor-pointer border border-white/10 slide-card';
+    card.className = 'neu-card p-3 min-w-[230px] max-w-[240px] min-h-[220px] flex flex-col justify-between gap-2 cursor-pointer slide-card';
     card.innerHTML = `
-      <div>
-        <h3 class="font-headline-md text-lg font-bold text-on-surface mb-1 truncate" title="${escapeHtml(server.name)}">${escapeHtml(server.name)}</h3>
-        <p class="text-[10px] text-on-surface-variant uppercase tracking-[0.12em] mb-2">${escapeHtml(server.ip)}</p>
-        <p class="text-[12px] text-on-surface-variant leading-snug line-clamp-3" title="${escapeHtml(server.description || '')}">${escapeHtml(server.description || 'No server description available.')}</p>
+      <div class="neu-image h-[84px] flex-shrink-0" style="--c1:${c1};--c2:${c2}">
+        ${banner ? `<img src="${escapeHtml(banner)}" alt="${escapeHtml(server.name)}" onerror="this.style.display='none'"/>` : ''}
+        <span class="material-symbols-outlined text-[36px] text-white/90" style="font-variation-settings: 'FILL' 1;">public</span>
       </div>
-      <div class="grid grid-cols-2 gap-2 mt-2 text-[10px] text-on-surface-variant">
-        <div class="px-2 py-0.5 rounded-2xl bg-white/5 flex flex-col items-start gap-0.5 w-full">
-          <span class="leading-tight text-[10px]">Players</span>
-          <span class="font-bold text-on-surface leading-tight text-[12px] block w-full truncate">${escapeHtml(server.players || 'N/A')}</span>
-        </div>
-        <div class="px-2 py-0.5 rounded-2xl bg-white/5 flex flex-col items-start gap-0.5 w-full">
-          <span class="leading-tight text-[10px]">Version</span>
-          <span class="font-bold text-on-surface leading-tight text-[12px] block w-full truncate">${escapeHtml(server.version || 'N/A')}</span>
-        </div>
+      <div>
+        <h3 class="font-headline-md text-[15px] font-bold text-on-surface mb-1 truncate" title="${escapeHtml(server.name)}">${escapeHtml(server.name)}</h3>
+        <p class="text-[10px] text-on-surface-variant uppercase tracking-[0.12em] mb-1">${escapeHtml(server.ip)}${server.version ? ` · ${escapeHtml(server.version)}` : ''}</p>
+        <p class="text-[12px] text-on-surface-variant leading-snug line-clamp-2" title="${escapeHtml(server.description || '')}">${escapeHtml(server.description || 'No server description available.')}</p>
+      </div>
+      <div class="flex items-center justify-between gap-2 mt-auto">
+        <span class="text-[10px] font-bold text-primary uppercase tracking-widest truncate">${escapeHtml(server.players || 'N/A')} online</span>
+        <span class="neu-cta flex-shrink-0"><span class="material-symbols-outlined text-[16px]">content_copy</span></span>
       </div>
     `;
     card.style.transitionDelay = `${i * 45 + 50}ms`;
@@ -243,14 +310,30 @@ function renderHomeServerCarousel(servers) {
       navigator.clipboard.writeText(server.ip).then(() => {
         setStatus('Server IP Copied', `${server.ip} copied to clipboard!`, 'running');
       });
+      const old = card.querySelector('.copied-overlay');
+      if (old) old.remove();
+      const overlay = document.createElement('div');
+      overlay.className = 'copied-overlay absolute inset-0 z-20 flex flex-col items-center justify-center gap-1';
+      overlay.style.background = 'rgba(19, 19, 21, 0.72)';
+      overlay.style.borderRadius = '22px';
+      overlay.style.opacity = '0';
+      overlay.style.transition = 'opacity 0.2s ease';
+      overlay.innerHTML = `<span class="material-symbols-outlined text-[22px] text-primary" style="font-variation-settings: 'FILL' 1;">check</span><span class="text-[12px] font-bold text-on-surface tracking-widest uppercase">Copied!</span>`;
+      card.appendChild(overlay);
+      requestAnimationFrame(() => { overlay.style.opacity = '1'; });
+      window.setTimeout(() => {
+        overlay.style.transition = 'opacity 0.25s ease';
+        overlay.style.opacity = '0';
+        window.setTimeout(() => overlay.remove(), 260);
+      }, 1000);
     };
     container.appendChild(card);
   }
 
   const viewAllCard = document.createElement('div');
-  viewAllCard.className = 'glass-card rounded-2xl p-4 min-w-[220px] max-w-[240px] flex flex-col items-center justify-center gap-2 hover:bg-white/10 transition-all cursor-pointer border border-white/10 slide-card text-center';
+  viewAllCard.className = 'neu-card p-4 min-w-[220px] max-w-[240px] min-h-[220px] flex flex-col items-center justify-center gap-2 cursor-pointer slide-card text-center';
   viewAllCard.innerHTML = `
-      <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-2">
+      <div class="w-16 h-16 rounded-full neu-inset flex items-center justify-center mb-2">
          <span class="material-symbols-outlined text-[32px] text-primary">arrow_forward</span>
       </div>
       <h3 class="font-headline-md text-lg font-bold text-on-surface">View All Servers</h3>
@@ -282,12 +365,12 @@ function renderSkeletonHomeCards(grid, count = 10) {
   grid.innerHTML = '';
   for (let i = 0; i < count; i++) {
      const card = document.createElement('div');
-     card.className = 'glass-card rounded-2xl p-3 min-w-[220px] max-w-[240px] min-h-[140px] flex flex-col animate-pulse bg-white/5 border border-white/5 slide-card visible';
+     card.className = 'neu-card p-3 min-w-[220px] max-w-[240px] min-h-[220px] flex flex-col animate-pulse slide-card visible';
      card.innerHTML = `
+        <div class="h-20 w-full bg-white/5 rounded-xl mb-2"></div>
         <div class="h-6 w-3/4 bg-white/10 rounded mb-2"></div>
         <div class="h-3 w-5/6 bg-white/5 rounded"></div>
         <div class="h-3 w-full bg-white/5 rounded mt-2"></div>
-        <div class="h-3 w-4/6 bg-white/5 rounded mt-2"></div>
         <div class="h-4 w-1/3 bg-white/10 rounded mt-auto"></div>
      `;
      card.style.transitionDelay = `${i * 30}ms`;
@@ -300,9 +383,9 @@ function renderSkeletonHomeNews(grid, count = 3) {
   grid.innerHTML = '';
   for (let i = 0; i < count; i++) {
      const card = document.createElement('div');
-     card.className = 'glass-card rounded-2xl p-4 flex flex-col md:flex-row gap-4 animate-pulse bg-white/5 border border-white/5 slide-card visible';
+     card.className = 'neu-card p-4 flex flex-col md:flex-row gap-4 animate-pulse slide-card visible';
      card.innerHTML = `
-        <div class="w-full md:w-1/3 h-44 bg-white/10 rounded-md"></div>
+        <div class="w-full md:w-1/3 h-44 bg-white/5 rounded-xl"></div>
         <div class="flex-1 flex flex-col">
            <div class="h-6 w-1/2 bg-white/10 rounded mb-4"></div>
            <div class="h-4 w-full bg-white/5 rounded mb-2"></div>
@@ -450,9 +533,9 @@ function renderHomeNewsAppend(items) {
     if (isLong) {
       // full-width horizontal feature
       const card = document.createElement('div');
-      card.className = 'glass-card rounded-2xl p-4 flex flex-col md:flex-row gap-4 hover:bg-white/5 transition-all cursor-pointer border border-white/10';
+      card.className = 'neu-card p-4 flex flex-col md:flex-row gap-4 cursor-pointer';
       card.innerHTML = `
-        <div class="w-full md:w-1/3 h-44 overflow-hidden rounded-md bg-black/20">
+        <div class="w-full md:w-1/3 h-44 neu-frame flex-shrink-0">
           <img src="${escapeHtml(getImage(it))}" alt="${escapeHtml(it.title||'') }" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/640x360?text=News'" />
         </div>
         <div class="flex-1">
@@ -480,9 +563,9 @@ function renderHomeNewsAppend(items) {
         const it2 = items[i + j];
         const img = getImage(it2);
         const card = document.createElement('div');
-        card.className = 'glass-card rounded-2xl p-3 flex-1 hover:bg-white/5 transition-all cursor-pointer border border-white/10';
+        card.className = 'neu-card p-3 flex-1 cursor-pointer';
         card.innerHTML = `
-          <div class="h-28 w-full overflow-hidden rounded-md bg-black/20 mb-2">
+          <div class="h-28 w-full neu-frame mb-2">
             <img src="${escapeHtml(img)}" alt="${escapeHtml(it2.title||'')}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/320x180?text=News'" />
           </div>
           <h4 class="font-bold text-sm mb-1">${escapeHtml(it2.title)}</h4>
@@ -508,9 +591,9 @@ function renderHomeNewsAppend(items) {
       row.className = 'flex gap-4';
 
       const main = document.createElement('div');
-      main.className = 'glass-card rounded-2xl p-4 flex-1 hover:bg-white/5 transition-all cursor-pointer border border-white/10';
+      main.className = 'neu-card p-4 flex-1 cursor-pointer';
       main.innerHTML = `
-        <div class="h-44 w-full overflow-hidden rounded-md bg-black/20 mb-2">
+        <div class="h-44 w-full neu-frame mb-2">
           <img src="${escapeHtml(getImage(it))}" alt="${escapeHtml(it.title||'') }" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/640x360?text=News'" />
         </div>
         <h3 class="font-bold text-lg mb-1">${escapeHtml(it.title)}</h3>
@@ -522,9 +605,9 @@ function renderHomeNewsAppend(items) {
       side.className = 'flex flex-col gap-4 w-1/3';
       [next, next2].forEach((s) => {
         const small = document.createElement('div');
-        small.className = 'glass-card rounded-2xl p-3 h-1/2 hover:bg-white/5 transition-all cursor-pointer border border-white/10';
+        small.className = 'neu-card p-3 h-1/2 cursor-pointer';
         small.innerHTML = `
-          <div class="h-20 w-full overflow-hidden rounded-md bg-black/20 mb-2">
+          <div class="h-20 w-full neu-frame mb-2">
             <img src="${escapeHtml(getImage(s))}" alt="${escapeHtml(s.title||'')}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/320x180?text=News'" />
           </div>
           <h5 class="font-bold text-sm mb-1">${escapeHtml(s.title)}</h5>
@@ -553,9 +636,9 @@ function renderHomeNewsAppend(items) {
     // Fallback single small card
     const img = getImage(it);
     const card = document.createElement('div');
-    card.className = 'glass-card rounded-2xl p-3 hover:bg-white/5 transition-all cursor-pointer border border-white/10';
+    card.className = 'neu-card p-3 cursor-pointer';
     card.innerHTML = `
-      <div class="h-28 w-full overflow-hidden rounded-md bg-black/20 mb-2">
+      <div class="h-28 w-full neu-frame mb-2">
         <img src="${escapeHtml(img)}" alt="${escapeHtml(it.title||'')}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/320x180?text=News'" />
       </div>
       <h4 class="font-bold text-sm mb-1">${escapeHtml(it.title)}</h4>
@@ -601,7 +684,7 @@ async function loadHomeNews() {
   async function loadMore() {
     if (state.homeNewsLoading || state.homeNewsEnded) return;
     state.homeNewsLoading = true;
-    if (loader) loader.classList.remove('hidden');
+    if (loader && state.homeNewsPage > 1) loader.classList.remove('hidden');
     try {
       const items = await fetchNewsPage(state.homeNewsPage);
       if (!items || !items.length) {
@@ -732,7 +815,6 @@ function updateAccountUI() {
     : '';
 
   $('account-name').textContent = name;
-  $('footer-username').textContent = name;
   $('account-type').textContent = account
     ? account.type === 'msa'
       ? 'Microsoft Account'
@@ -838,20 +920,7 @@ function setLoaderTab(loader) {
 
   document.querySelectorAll('[data-loader-tab]').forEach((tab) => {
     const active = tab.dataset.loaderTab === loader;
-    tab.classList.toggle('border-primary', active);
-    tab.classList.toggle('text-primary', active);
-    tab.classList.toggle('bg-primary/10', active);
-    tab.classList.toggle('font-bold', active);
-    tab.classList.toggle('scale-[1.03]', active);
-    tab.classList.toggle('shadow-[0_0_12px_rgba(75,142,255,0.3)]', active);
-    tab.classList.toggle('opacity-100', active);
-
-    tab.classList.toggle('border-transparent', !active);
-    tab.classList.toggle('text-on-surface-variant', !active);
-    tab.classList.toggle('scale-100', !active);
-    tab.classList.toggle('opacity-50', !active);
-    tab.classList.toggle('hover:opacity-80', !active);
-    tab.classList.toggle('bg-white/5', !active);
+    tab.classList.toggle('active', active);
   });
 
   $('loader-version-row').classList.toggle('hidden', loader === 'vanilla');
@@ -909,26 +978,6 @@ function bindEvents() {
         }
      });
   });
-
-  const ramSlider = $('ram-slider');
-  if (ramSlider) {
-    ramSlider.addEventListener('input', (e) => {
-      state.memory = Number(e.target.value);
-      $('ram-label').textContent = `${state.memory}GB`;
-    });
-    ramSlider.addEventListener('change', async (e) => {
-      state.memory = Number(e.target.value);
-      $('ram-label').textContent = `${state.memory}GB`;
-      state.settings = state.settings || {};
-      state.settings.memory = state.memory;
-      try {
-        await window.launcherAPI.saveSettings(state.settings);
-        setStatus('Memory Saved', `${state.memory}GB memory allocation remembered.`);
-      } catch (error) {
-        console.error('Failed to save memory setting', error);
-      }
-    });
-  }
 
   $('account-card').addEventListener('click', () => openModal('account-modal'));
   $('version-card').addEventListener('click', async () => {
@@ -1132,9 +1181,11 @@ function bindEvents() {
 
   $('btn-notifications')?.addEventListener('click', () => {
     const panel = $('status-panel');
+    const btn = $('btn-notifications');
     if (!panel) return;
 
     const isVisible = panel.classList.contains('is-visible');
+    if (btn) btn.classList.toggle('is-on', !isVisible);
 
     if (isVisible) {
       panel.classList.remove('is-visible');
@@ -1154,6 +1205,8 @@ function bindEvents() {
   $('btn-topbar-settings')?.addEventListener('click', () => {
     $('setting-password').value = state.settings.password || '';
     $('setting-java-args').value = state.settings.javaArgs || '';
+    $('setting-open-console').checked = !!state.settings.openConsole;
+    $('setting-free-panorama').checked = !!state.settings.freePanorama;
     $('setting-modpack-urls').value = state.settings.modpackUrls ? state.settings.modpackUrls.join('\n') : '';
     $('setting-server-list-url').value = state.settings.serverListUrl || '';
     switchView('settings');
@@ -1246,6 +1299,8 @@ function bindEvents() {
         a.addEventListener('click', () => {
            $('setting-password').value = state.settings.password || '';
            $('setting-java-args').value = state.settings.javaArgs || '';
+           $('setting-open-console').checked = !!state.settings.openConsole;
+           $('setting-free-panorama').checked = !!state.settings.freePanorama;
            $('setting-curseforge-proxy').value = state.settings.curseforgeProxyUrl || 'https://patient-darkness-1364.yaman26.workers.dev/';
            $('setting-modpack-urls').value = state.settings.modpackUrls ? state.settings.modpackUrls.join('\n') : '';
            $('setting-server-list-url').value = state.settings.serverListUrl || '';
@@ -1275,12 +1330,31 @@ function bindEvents() {
          curseforgeProxyUrl: cfProxy,
          modpackUrls: urls.length ? urls : ['https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/modpacks.json'],
          serverListUrl: serverListUrl || 'https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/servers.json',
+         freePanorama: $('setting-free-panorama').checked,
+         panoramaDim: Number($('setting-panorama-dim')?.value ?? 75),
          memory: state.memory,
       };
       state.settings = newSettings;
+      freePanorama = !!newSettings.freePanorama;
+      applyPanoramaMode();
       await window.launcherAPI.saveSettings(newSettings);
       setStatus('Settings Saved', 'Ayarlar kaydedildi.');
       await loadHomeData();
+  });
+
+  $('setting-free-panorama')?.addEventListener('change', (e) => {
+    freePanorama = e.target.checked;
+    applyPanoramaMode();
+  });
+
+  $('setting-panorama-dim')?.addEventListener('input', (e) => {
+    applyPanoramaDim(e.target.value);
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    panoramaMouseX = e.clientX;
+    panoramaMouseY = e.clientY;
+    if (freePanorama) updatePanoramaFree();
   });
 
   // Modpack Tabs
@@ -1293,8 +1367,8 @@ function bindEvents() {
        if (!el) return;
        const active = id === tabId;
        el.className = active 
-           ? 'px-4 py-2 font-bold text-primary border-b-2 border-primary transition-colors' 
-           : 'px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors';
+           ? 'neu-tab active' 
+           : 'neu-tab';
      });
      
      const searchContainer = $('modpack-search-container');
@@ -1359,6 +1433,10 @@ function updateActiveModpackUI() {
     // clear fields
     $('active-pack-title').textContent = '';
     $('active-pack-desc').textContent = '';
+    const imgEl = $('active-pack-image');
+    if (imgEl) { imgEl.classList.add('hidden'); imgEl.removeAttribute('src'); }
+    const badge = $('active-pack-badge');
+    if (badge) badge.textContent = 'MODPACK';
     $('active-pack-details')?.classList.add('hidden');
     const btnContentClear = $('btn-play-content');
     if (btnContentClear) btnContentClear.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span> PLAY`;
@@ -1368,6 +1446,23 @@ function updateActiveModpackUI() {
   panel.classList.remove('hidden');
   $('active-pack-title').textContent = pack.name;
   $('active-pack-desc').textContent = pack.description || 'Ready to deploy and play!';
+
+  const imgEl = $('active-pack-image');
+  if (imgEl) {
+    const icon = pack.icon_url || (pack.logo && pack.logo.url) || pack.logo || pack.thumbnail || '';
+    imgEl.src = icon || 'assets/empty.png';
+    imgEl.classList.remove('hidden');
+    imgEl.onerror = () => {
+      if (imgEl.src.lastIndexOf('assets/empty.png') === -1) {
+        imgEl.src = 'assets/empty.png';
+      } else {
+        imgEl.classList.add('hidden');
+      }
+    };
+  }
+
+  const badge = $('active-pack-badge');
+  if (badge) badge.textContent = pack.source ? String(pack.source).toUpperCase() : 'MODPACK';
   
   $('active-pack-details').classList.remove('hidden');
   const loaderStr = (() => {
@@ -1481,20 +1576,15 @@ function renderSkeletonMultiplayer(grid, count = 5) {
   grid.innerHTML = '';
   for (let i = 0; i < count; i++) {
      const card = document.createElement('div');
-     card.className = 'glass-card rounded-xl overflow-hidden flex flex-col md:flex-row animate-pulse bg-white/5 border border-white/5 stagger-card visible';
+     card.className = 'neu-card p-3 flex flex-col md:flex-row gap-3 animate-pulse slide-card visible';
      card.innerHTML = `
-        <div class="h-32 md:h-32 md:w-40 w-full bg-white/10 flex-shrink-0"></div>
-        <div class="p-4 flex flex-col justify-between gap-4 flex-1">
-           <div>
-              <div class="h-6 w-1/3 bg-white/10 rounded"></div>
-              <div class="h-4 w-1/4 bg-white/5 rounded mt-3"></div>
-              <div class="h-4 w-full bg-white/5 rounded mt-4"></div>
-              <div class="h-4 w-3/4 bg-white/5 rounded mt-2"></div>
-           </div>
-           <div class="pt-4 border-t border-white/5 flex gap-4">
-              <div class="h-4 w-12 bg-white/5 rounded"></div>
-              <div class="h-4 w-12 bg-white/5 rounded"></div>
-           </div>
+        <div class="neu-frame h-32 md:h-auto md:w-48 flex-shrink-0"></div>
+        <div class="flex flex-col flex-1 gap-3 p-1">
+            <div class="h-6 w-2/3 bg-white/10 rounded"></div>
+            <div class="h-3 w-1/3 bg-white/5 rounded"></div>
+            <div class="h-3 w-full bg-white/5 rounded mt-2"></div>
+            <div class="h-3 w-5/6 bg-white/5 rounded"></div>
+            <div class="h-4 w-1/3 bg-white/10 rounded mt-auto"></div>
         </div>
      `;
      card.style.transitionDelay = `${i * 30}ms`;
@@ -1560,20 +1650,20 @@ async function loadMultiplayerList(page = 1) {
          const domId = serverDomId(srv.ip);
 
          const card = document.createElement('div');
-         card.className = 'glass-card rounded-xl overflow-hidden flex flex-col md:flex-row hover:bg-white/10 transition-all cursor-pointer glow-effect border-outline-variant';
+         card.className = 'neu-card p-3 flex flex-col md:flex-row gap-3 cursor-pointer slide-card';
          card.classList.add('stagger-card');
          card.style.transitionDelay = `${(grid.children.length || 0) * 30 + 40}ms`;
          card.innerHTML = `
-           <div class="h-32 md:h-32 md:w-40 w-full overflow-hidden bg-black/40 flex-shrink-0">
-              <img src="${escapeHtml(srv.banner)}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" alt="Banner" onerror="this.src='https://via.placeholder.com/160?text=Server'"/>
+           <div class="neu-frame h-32 md:h-auto md:w-48 flex-shrink-0 overflow-hidden">
+              <img src="${escapeHtml(srv.banner)}" class="w-full h-full object-cover" alt="Banner" onerror="this.style.display='none'"/>
            </div>
-           <div class="p-4 flex flex-col justify-between gap-4 flex-1 min-w-0">
+           <div class="flex flex-col justify-between gap-3 flex-1 min-w-0">
               <div>
                 <h3 class="font-headline-md text-xl font-bold text-on-surface whitespace-nowrap overflow-hidden text-ellipsis">${escapeHtml(srv.name)}</h3>
-                <p class="text-[11px] text-on-surface-variant font-mono bg-white/5 border border-white/10 px-2 py-0.5 rounded inline-block mt-3">${escapeHtml(srv.ip)}</p>
+                <p class="text-[11px] text-on-surface-variant font-mono neu-inset px-2 py-0.5 rounded inline-block mt-3">${escapeHtml(srv.ip)}</p>
                 <p class="text-sm text-on-surface-variant mt-4 leading-relaxed line-clamp-3" title="${escapeHtml(srv.description)}">${escapeHtml(srv.description)}</p>
               </div>
-              <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-4 border-t border-white/5">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-3">
                   <div class="flex items-center gap-2 text-on-surface-variant text-xs opacity-80" title="Updating player count">
                      <span class="material-symbols-outlined text-[16px]">groups</span>
                      <span id="srv-players-${domId}">${escapeHtml(srv.players)}</span>
@@ -1590,6 +1680,22 @@ async function loadMultiplayerList(page = 1) {
              navigator.clipboard.writeText(srv.ip).then(() => {
                  setStatus('IP Copied', `${srv.ip} copied to clipboard!`, 'running');
              });
+             const old = card.querySelector('.copied-overlay');
+             if (old) old.remove();
+             const overlay = document.createElement('div');
+             overlay.className = 'copied-overlay absolute inset-0 z-20 flex flex-col items-center justify-center gap-1';
+             overlay.style.background = 'rgba(19, 19, 21, 0.72)';
+             overlay.style.borderRadius = '14px';
+             overlay.style.opacity = '0';
+             overlay.style.transition = 'opacity 0.2s ease';
+             overlay.innerHTML = `<span class="material-symbols-outlined text-[22px] text-primary" style="font-variation-settings: 'FILL' 1;">check</span><span class="text-[12px] font-bold text-on-surface tracking-widest uppercase">Copied server ip address!</span>`;
+             card.appendChild(overlay);
+             requestAnimationFrame(() => { overlay.style.opacity = '1'; });
+             window.setTimeout(() => {
+               overlay.style.transition = 'opacity 0.25s ease';
+               overlay.style.opacity = '0';
+               window.setTimeout(() => overlay.remove(), 260);
+             }, 1000);
          };
          grid.appendChild(card);
       }
@@ -1606,15 +1712,13 @@ function renderSkeletonModpacks(grid, count = 12) {
   grid.innerHTML = '';
   for (let i = 0; i < count; i++) {
      const card = document.createElement('div');
-     card.className = 'glass-card rounded-xl overflow-hidden flex flex-col h-[280px] animate-pulse bg-white/5 border border-white/5 stagger-card visible';
+     card.className = 'neu-card p-3 flex flex-col animate-pulse slide-card visible';
      card.innerHTML = `
-        <div class="h-32 w-full bg-white/10"></div>
-        <div class="p-4 flex flex-col flex-1 gap-3">
-            <div class="h-5 w-3/4 bg-white/10 rounded mt-1"></div>
-            <div class="h-3 w-full bg-white/5 rounded mt-2"></div>
-            <div class="h-3 w-5/6 bg-white/5 rounded"></div>
-            <div class="h-6 w-1/3 bg-white/10 rounded mt-auto"></div>
-        </div>
+        <div class="h-20 w-full bg-white/5 rounded-xl mb-2"></div>
+        <div class="h-6 w-3/4 bg-white/10 rounded mb-2"></div>
+        <div class="h-3 w-5/6 bg-white/5 rounded"></div>
+        <div class="h-3 w-full bg-white/5 rounded mt-2"></div>
+        <div class="h-4 w-1/3 bg-white/10 rounded mt-auto"></div>
      `;
      card.style.transitionDelay = `${i * 30}ms`;
      grid.appendChild(card);
@@ -1643,24 +1747,22 @@ async function loadModpacksList() {
           const loader = pack.modLoaders && pack.modLoaders.length ? pack.modLoaders[0] : (pack.loader || 'fabric');
           const mcVersion = pack.mcVersion || pack.minecraftVersion || '1.20.4';
           const typeStr = pack.type ? pack.type.toUpperCase() : 'MODPACK';
-          const iconUrl = pack.iconUrl || `https://via.placeholder.com/150?text=${encodeURIComponent(pack.name || pack.folder || 'Installed')}`;
+          const iconUrl = pack.iconUrl || 'assets/empty.png';
           const packDesc = pack.description || `Installed ${escapeHtml(pack.type || 'standard')} modpack.`;
-          card.className = 'glass-card rounded-xl overflow-hidden flex flex-col hover:bg-white/10 transition-all cursor-pointer glow-effect border-outline-variant';
+          card.className = 'neu-card p-3 flex flex-col justify-between gap-2 cursor-pointer slide-card';
           card.innerHTML = `
-            <div class="h-32 w-full overflow-hidden bg-black/40">
-                <img src="${escapeHtml(iconUrl || '')}" class="w-full h-full object-cover opacity-80" onerror="this.src='https://via.placeholder.com/320x150?text=Installed'" />
+            <div class="neu-badge">${escapeHtml(typeStr)}</div>
+            <div class="neu-image h-[84px] flex-shrink-0">
+              <img src="${escapeHtml(iconUrl)}" alt="" onerror="this.onerror=null;this.src='assets/empty.png'"/>
+              <span class="material-symbols-outlined text-[36px] text-white/90" style="font-variation-settings: 'FILL' 1;">package_2</span>
             </div>
-            <div class="p-4 flex flex-col flex-1">
-               <div class="flex items-start justify-between gap-3">
-                 <h3 class="font-headline-md text-lg font-bold text-on-surface truncate">${escapeHtml(pack.name || pack.folder)}</h3>
-                 <span class="material-symbols-outlined text-primary group-hover:block transition-all">play_arrow</span>
-               </div>
-               <p class="text-sm text-on-surface-variant flex-1 line-clamp-3 mt-2">${escapeHtml(packDesc)}</p>
-               <div class="flex flex-wrap gap-2 mt-4 pt-2 border-t border-white/5">
-                  <span class="px-2 py-0.5 rounded border border-white/10 bg-surface-variant/50 text-on-surface-variant text-[10px] font-label-sm">${escapeHtml(typeStr)}</span>
-                  <span class="px-2 py-0.5 rounded border border-white/10 bg-surface-variant/50 text-on-surface-variant text-[10px] font-label-sm">MC ${escapeHtml(mcVersion)}</span>
-                  <span class="px-2 py-0.5 rounded border border-white/10 bg-surface-variant/50 text-on-surface-variant text-[10px] font-label-sm">v${escapeHtml(pack.version)}</span>
-               </div>
+            <div>
+              <h3 class="font-headline-md text-[15px] font-bold text-on-surface mb-1 line-clamp-2">${escapeHtml(pack.name || pack.folder)}</h3>
+              <p class="text-[12px] text-on-surface-variant leading-snug line-clamp-2">${escapeHtml(packDesc)}</p>
+            </div>
+            <div class="flex items-center justify-between gap-2 mt-auto">
+              <span class="text-[10px] font-bold text-primary uppercase tracking-widest truncate">${escapeHtml(loader.split('-')[0])} · MC ${escapeHtml(mcVersion)}</span>
+              <span class="neu-cta flex-shrink-0"><span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span></span>
             </div>
           `;
           card.classList.add('stagger-card');
@@ -1723,19 +1825,30 @@ async function loadModpacksList() {
           const installedPack = installedMap[pack.name];
           const isInstalled = installedPack && installedPack.version === pack.version;
           const card = document.createElement('div');
-          card.className = 'glass-card rounded-xl p-5 flex flex-col gap-4 hover:bg-white/10 transition-all hover:scale-[1.02] cursor-pointer glow-effect border-outline-variant';
+          const sourceStr = pack.source ? pack.source.toUpperCase() : 'CATALOG';
+          const icon = pack.icon_url || (pack.logo && pack.logo.url) || pack.logo || pack.thumbnail || '';
+          const imgSrc = icon || 'assets/empty.png';
+          const imgErr = icon
+            ? "this.onerror=null;this.src='assets/empty.png'"
+            : "this.style.display='none'";
+          const loader = pack.modLoaders && pack.modLoaders[0] ? pack.modLoaders[0].split('-')[0] : String(pack.loader || 'fabric');
+          const mcVersion = pack.mcVersion || pack.minecraftVersion || 'Latest';
+          card.className = 'neu-card p-3 flex flex-col justify-between gap-2 cursor-pointer slide-card';
           card.innerHTML = `
-            <div class="flex items-start justify-between gap-3">
-              <div class="min-w-0 flex-1">
-                <h3 class="font-headline-md text-lg font-bold text-on-surface truncate">${escapeHtml(pack.name)}</h3>
-              </div>
-              ${isInstalled ? '<button class="reinstall-modpack-btn px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-[10px] font-semibold">Reinstall</button>' : '<span class="material-symbols-outlined text-primary group-hover:block transition-all">download</span>'}
+            <div class="neu-badge">${escapeHtml(sourceStr)}</div>
+            <div class="neu-image h-[84px] flex-shrink-0">
+              <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(pack.name || '')}" onerror="${imgErr}"/>
+              <span class="material-symbols-outlined text-[36px] text-white/90" style="font-variation-settings: 'FILL' 1;">package_2</span>
             </div>
-            <p class="text-sm text-on-surface-variant flex-grow">${escapeHtml(pack.description || 'A fantastic modpack ready to be played.')}</p>
-            <div class="flex flex-wrap gap-2 mt-auto">
-                <span class="px-2 py-0.5 rounded border border-primary/30 bg-primary/10 text-primary text-[10px] font-label-sm uppercase font-bold">${escapeHtml(pack.loader)} ${escapeHtml(pack.loaderVersion || '')}</span>
-                <span class="px-2 py-0.5 rounded border border-white/10 bg-surface-variant/50 text-on-surface-variant text-[10px] font-label-sm">MC ${escapeHtml(pack.mcVersion)}</span>
-                <span class="px-2 py-0.5 rounded border border-white/10 bg-surface-variant/50 text-on-surface-variant text-[10px] font-label-sm">v${escapeHtml(pack.version)}</span>
+            <div>
+              <h3 class="font-headline-md text-[15px] font-bold text-on-surface mb-1 line-clamp-2">${escapeHtml(pack.name || pack.title || pack.folder)}</h3>
+              <p class="text-[12px] text-on-surface-variant leading-snug line-clamp-2" title="${escapeHtml(pack.description || '')}">${escapeHtml(pack.description || 'No description available.')}</p>
+            </div>
+            <div class="flex items-center justify-between gap-2 mt-auto">
+              <span class="text-[10px] font-bold text-primary uppercase tracking-widest truncate">${escapeHtml(loader)} · ${escapeHtml(mcVersion)}</span>
+              ${isInstalled
+                ? '<button class="reinstall-modpack-btn neu-chip cursor-pointer" style="font-size:10px">Reinstall</button>'
+                : '<span class="neu-cta flex-shrink-0"><span class="material-symbols-outlined text-[16px]" style="font-variation-settings: \'FILL\' 1;">download</span></span>'}
             </div>
           `;
           card.classList.add('stagger-card');
@@ -1797,18 +1910,21 @@ async function loadModpacksList() {
         for (let i = 0; i < hits.length; i++) {
            const hit = hits[i];
            const card = document.createElement('div');
-           card.className = 'glass-card rounded-xl overflow-hidden flex flex-col hover:bg-white/10 transition-all cursor-pointer glow-effect border-outline-variant';
+           const iconUrl = hit.icon_url || '';
+           card.className = 'neu-card p-3 flex flex-col justify-between gap-2 cursor-pointer slide-card';
            card.innerHTML = `
-              <div class="h-32 w-full overflow-hidden bg-black/40">
-                  <img src="${escapeHtml(hit.icon_url || '')}" class="w-full h-full object-cover opacity-80" onerror="this.src='https://via.placeholder.com/320x150?text=Modrinth'" />
+              <div class="neu-badge">MODRINTH</div>
+              <div class="neu-image h-[84px] flex-shrink-0">
+                  <img src="${escapeHtml(iconUrl)}" alt="" onerror="this.style.display='none'"/>
+                  <span class="material-symbols-outlined text-[36px] text-white/90" style="font-variation-settings: 'FILL' 1;">package_2</span>
               </div>
-              <div class="p-4 flex flex-col flex-1">
-                 <h3 class="font-headline-md text-lg font-bold text-on-surface truncate cursor-pointer" title="${escapeHtml(hit.title)}">${escapeHtml(hit.title)}</h3>
-                 <p class="text-sm text-on-surface-variant flex-1 mt-2 line-clamp-3">${hit.description ? escapeHtml(hit.description) : ''}</p>
-                 <div class="flex items-center justify-between mt-4 border-t border-white/5 pt-2">
-                    <span class="text-primary text-[10px] font-bold">Modrinth</span>
-                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant">download</span>
-                 </div>
+              <div>
+                 <h3 class="font-headline-md text-[15px] font-bold text-on-surface mb-1 line-clamp-2" title="${escapeHtml(hit.title)}">${escapeHtml(hit.title)}</h3>
+                 <p class="text-[12px] text-on-surface-variant leading-snug line-clamp-3">${hit.description ? escapeHtml(hit.description) : ''}</p>
+              </div>
+              <div class="flex items-center justify-between gap-2 mt-auto">
+                 <span class="text-[10px] font-bold text-primary uppercase tracking-widest truncate">Modrinth</span>
+                 <span class="neu-cta flex-shrink-0"><span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">download</span></span>
               </div>
            `;
            card.classList.add('stagger-card');
@@ -1850,18 +1966,20 @@ async function loadModpacksList() {
            const attachments = hit.logo ? [hit.logo] : [];
            const iconUrl = attachments.length ? attachments[0].thumbnailUrl : (hit.logo?.url || '');
            const card = document.createElement('div');
-           card.className = 'glass-card rounded-xl overflow-hidden flex flex-col hover:bg-white/10 transition-all cursor-pointer glow-effect border-outline-variant';
+           card.className = 'neu-card p-3 flex flex-col justify-between gap-2 cursor-pointer slide-card';
            card.innerHTML = `
-              <div class="h-32 w-full overflow-hidden bg-black/40">
-                  <img src="${escapeHtml(iconUrl)}" class="w-full h-full object-cover opacity-80" onerror="this.src='https://via.placeholder.com/320x150?text=CurseForge'" />
+              <div class="neu-badge">CURSEFORGE</div>
+              <div class="neu-image h-[84px] flex-shrink-0">
+                  <img src="${escapeHtml(iconUrl)}" alt="" onerror="this.onerror=null;this.src='assets/empty.png'"/>
+                  <span class="material-symbols-outlined text-[36px] text-white/90" style="font-variation-settings: 'FILL' 1;">package_2</span>
               </div>
-              <div class="p-4 flex flex-col flex-1">
-                 <h3 class="font-headline-md text-lg font-bold text-on-surface truncate" title="${escapeHtml(hit.name)}">${escapeHtml(hit.name)}</h3>
-                 <p class="text-sm text-on-surface-variant mt-2 flex-1 line-clamp-3">${hit.summary ? escapeHtml(hit.summary) : ''}</p>
-                 <div class="flex items-center justify-between mt-4 border-t border-white/5 pt-2">
-                    <span class="text-tertiary text-[10px] font-bold">CurseForge</span>
-                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant">download</span>
-                 </div>
+              <div>
+                 <h3 class="font-headline-md text-[15px] font-bold text-on-surface mb-1 line-clamp-2" title="${escapeHtml(hit.name)}">${escapeHtml(hit.name)}</h3>
+                 <p class="text-[12px] text-on-surface-variant leading-snug line-clamp-3">${hit.summary ? escapeHtml(hit.summary) : ''}</p>
+              </div>
+              <div class="flex items-center justify-between gap-2 mt-auto">
+                 <span class="text-[10px] font-bold text-primary uppercase tracking-widest truncate">CurseForge</span>
+                 <span class="neu-cta flex-shrink-0"><span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">download</span></span>
               </div>
            `;
            card.classList.add('stagger-card');
@@ -2051,14 +2169,34 @@ async function init() {
 
 async function setupCore() {
   bindEvents();
+  freePanorama = !!state.settings?.freePanorama;
+  applyPanoramaMode();
+  const dimSlider = $('setting-panorama-dim');
+  const savedDim = state.settings?.panoramaDim;
+  const dim = savedDim != null ? savedDim : 75;
+  if (dimSlider) dimSlider.value = String(dim);
+  applyPanoramaDim(dim);
   // attach deselect button for active pack
   $('active-pack-close')?.addEventListener('click', () => clearActiveModpack());
+
+  // home section show/hide toggles
+  const sectionToggles = [
+    ['toggle-home-modpacks', 'home-modpack-body'],
+    ['toggle-home-servers', 'home-server-body'],
+    ['toggle-home-news', 'home-news-body']
+  ];
+  for (const [btnId, bodyId] of sectionToggles) {
+    const btn = $(btnId);
+    const body = $(bodyId);
+    if (!btn || !body) continue;
+    btn.addEventListener('click', () => {
+      const hidden = body.classList.toggle('hidden');
+      btn.classList.toggle('is-on', hidden);
+    });
+  }
   
   if (state.settings?.memory) {
     state.memory = state.settings.memory;
-    const ramSlider = $('ram-slider');
-    if (ramSlider) ramSlider.value = String(state.memory);
-    $('ram-label').textContent = `${state.memory}GB`;
   }
   
   state.account = await window.launcherAPI.getAccount();

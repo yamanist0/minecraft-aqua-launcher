@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="100%" height="100%">
+    <!-- Ana Launcher İkon Kutusu, ortalanmış ve büyütülmüş -->
+    <g transform="translate(-200, 10) scale(1.5)">
+        <rect x="200" y="60" width="400" height="400" rx="70" fill="#e0e0e0" />
+
+        <!-- 4 Köşedeki Dekoratif Minecraft Vidaları / Blokları -->
+        <rect x="240" y="100" width="24" height="24" rx="6" fill="#2d2d32" />
+        <rect x="536" y="100" width="24" height="24" rx="6" fill="#2d2d32" />
+        <rect x="240" y="396" width="24" height="24" rx="6" fill="#2d2d32" />
+        <rect x="536" y="396" width="24" height="24" rx="6" fill="#2d2d32" />
+
+        <!-- Bloklu Su Damlası (Düz, uygulama gri tonu) -->
+        <path d="M 380,120 H 420 V 160 H 460 V 200 H 500 V 300 H 460 V 340 H 340 V 300 H 300 V 200 H 340 V 160 H 380 Z" fill="#2d2d32" />
+
+        <!-- Bloklu 'A' Harfi -->
+        <path d="M 380,180 H 420 V 200 H 440 V 280 H 410 V 240 H 390 V 280 H 360 V 200 H 380 Z M 390,200 H 410 V 220 H 390 Z" fill="#e0e0e0" fill-rule="evenodd" />
+    </g>
+</svg>

@@ -1,6 +1,6 @@
 {
   "name": "aqua-launcher",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Aqua Launcher - Minecraft launcher",
   "main": "main.js",
   "scripts": {
@@ -13,7 +13,8 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "^35.0.0",
-    "electron-builder": "^26.0.0"
+    "electron-builder": "^26.0.0",
+    "pngjs": "^7.0.0"
   },
   "dependencies": {
     "adm-zip": "^0.5.18",

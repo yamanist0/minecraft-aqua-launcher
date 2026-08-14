@@ -15,16 +15,16 @@
                 extend: {
                     "colors": {
                         "tertiary-fixed-dim": "#e8b3ff",
-                        "surface-tint": "#adc6ff",
+                        "surface-tint": "#87CEFA",
                         "primary-fixed": "#d8e2ff",
                         "inverse-primary": "#005bc1",
                         "on-surface-variant": "#c1c6d7",
                         "on-primary-fixed": "#001a41",
-                        "primary": "#adc6ff",
-                        "primary-container": "#4b8eff",
+                        "primary": "#87CEFA",
+                        "primary-container": "#87CEFA",
                         "on-primary-fixed-variant": "#004493",
                         "on-tertiary-container": "#460066",
-                        "secondary": "#74d1ff",
+                        "secondary": "#87CEFA",
                         "on-background": "#e4e2e4",
                         "on-secondary-container": "#002e3f",
                         "surface": "#131315",
@@ -47,11 +47,11 @@
                         "surface-container": "#1f1f21",
                         "surface-variant": "#353437",
                         "on-tertiary": "#510074",
-                        "secondary-fixed-dim": "#74d1ff",
+                        "secondary-fixed-dim": "#87CEFA",
                         "outline-variant": "#414755",
                         "tertiary-container": "#c567f4",
                         "on-surface": "#e4e2e4",
-                        "primary-fixed-dim": "#adc6ff",
+                        "primary-fixed-dim": "#87CEFA",
                         "on-error-container": "#ffdad6",
                         "background": "#131315",
                         "on-primary-container": "#00285c",
@@ -100,6 +100,24 @@
             color: #e4e2e4;
             overflow: hidden;
         }
+
+        * {
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        input,
+        textarea,
+        select {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        img {
+            -webkit-user-drag: none;
+            user-drag: none;
+            pointer-events: none;
+        }
         
         /* Custom scrollbar for webkit */
         ::-webkit-scrollbar {
@@ -146,12 +164,299 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        /* Neumorphic components */
+        .neu-card {
+            position: relative;
+            background: #2d2d32;
+            border-radius: 22px;
+            box-shadow: 8px 8px 16px #1f1f23, -8px -8px 16px #3b3b41;
+            transition: opacity 0.38s ease, transform 0.38s ease, box-shadow 0.35s ease;
+        }
+
+        .neu-card:hover,
+        .neu-card.slide-card:hover,
+        .neu-card.stagger-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 12px 12px 24px #1c1c20, -12px -12px 24px #404046;
+        }
+
+        .neu-card:hover:active,
+        .neu-card:active {
+            transform: translateY(0) scale(0.99);
+            box-shadow: inset 6px 6px 12px #1f1f23, inset -6px -6px 12px #3b3b41;
+        }
+
+        .neu-btn {
+            background: #2d2d32;
+            color: #c1c6d7;
+            transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 15px 25px -4px rgba(0, 0, 0, 0.5),
+                inset 0 -3px 4px -1px rgba(0, 0, 0, 0.2),
+                0 -10px 15px -1px rgba(255, 255, 255, 0.06),
+                inset 0 3px 4px -1px rgba(255, 255, 255, 0.15),
+                inset 0 0 5px 1px rgba(255, 255, 255, 0.08),
+                inset 0 20px 30px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .neu-btn:hover {
+            color: #87CEFA;
+        }
+
+        .neu-btn:active {
+            filter: blur(0.5px);
+            box-shadow: 0 12px 25px -4px rgba(0, 0, 0, 0.4),
+                inset 0 -8px 30px 1px rgba(255, 255, 255, 0.08),
+                0 -10px 15px -1px rgba(255, 255, 255, 0.06),
+                inset 0 8px 25px 0 rgba(0, 0, 0, 0.4),
+                inset 0 0 10px 1px rgba(255, 255, 255, 0.06);
+        }
+
+        .neu-image {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--c1, #87CEFA), var(--c2, #5A9FD1));
+        }
+
+        .neu-image img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .neu-frame {
+            overflow: hidden;
+            border-radius: 14px;
+            background: #26262b;
+        }
+
+        .neu-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 2;
+            background: #2d2d32;
+            color: #87CEFA;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            padding: 3px 9px;
+            border-radius: 999px;
+            box-shadow: 3px 3px 6px #1f1f23, -3px -3px 6px #3b3b41;
+        }
+
+        .neu-cta {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #2d2d32;
+            color: #87CEFA;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 4px 4px 8px #1f1f23, -4px -4px 8px #3b3b41;
+            transition: all 0.25s ease;
+        }
+
+        .neu-card:hover .neu-cta {
+            box-shadow: inset 4px 4px 8px #1f1f23, inset -4px -4px 8px #3b3b41;
+        }
+
+        .neu-inset {
+            background: #2d2d32;
+            box-shadow: inset 5px 5px 10px #1f1f23, inset -5px -5px 10px #3b3b41;
+        }
+
+        .neu-chip {
+            display: inline-block;
+            background: #2d2d32;
+            color: #87CEFA;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            padding: 3px 9px;
+            border-radius: 999px;
+            box-shadow: 3px 3px 6px #1f1f23, -3px -3px 6px #3b3b41;
+        }
+
+        .neu-close {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #2d2d32;
+            color: #c1c6d7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 4px 4px 8px #1f1f23, -4px -4px 8px #3b3b41;
+            transition: all 0.25s ease;
+        }
+
+        .neu-close:hover {
+            color: #ffb4ab;
+            box-shadow: inset 4px 4px 8px #1f1f23, inset -4px -4px 8px #3b3b41;
+        }
+
+        .neu-box-toggle {
+            background: #2d2d32;
+            box-shadow: 6px 6px 12px #1f1f23, -6px -6px 12px #3b3b41;
+            transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .neu-box-toggle:hover {
+            box-shadow: 7px 7px 14px #1f1f23, -7px -7px 14px #3b3b41;
+        }
+
+        .neu-box-toggle.is-on {
+            box-shadow: inset 5px 5px 10px #1f1f23, inset -5px -5px 10px #3b3b41;
+        }
+
+        .neu2-loader {
+            position: relative;
+            width: 96px;
+            height: 96px;
+        }
+
+        .neu2-group {
+            position: absolute;
+            inset: 0;
+        }
+
+        .neu2-bar,
+        .neu2-track {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 8px;
+            height: 84px;
+            margin-left: -4px;
+            margin-top: -42px;
+            border-radius: 50px;
+        }
+
+        .neu2-bar {
+            background: #2d2d32;
+            box-shadow:
+                inset 3px 3px 6px #1f1f23,
+                inset -3px -3px 6px #3b3b41;
+        }
+
+        .neu2-track {
+            background: transparent;
+        }
+
+        .neu2-ball {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #87CEFA;
+            box-shadow:
+                inset 0 -3px 6px rgba(0, 0, 0, 0.35),
+                0 2px 3px rgba(0, 0, 0, 0.25),
+                0 8px 12px rgba(0, 0, 0, 0.2);
+            animation: neu2-move 3.63s ease-in-out infinite;
+        }
+
+        .neu2-group .neu2-bar:nth-child(1) { transform: rotate(0deg); }
+        .neu2-group .neu2-bar:nth-child(2) { transform: rotate(20deg); }
+        .neu2-group .neu2-bar:nth-child(3) { transform: rotate(40deg); }
+        .neu2-group .neu2-bar:nth-child(4) { transform: rotate(60deg); }
+        .neu2-group .neu2-bar:nth-child(5) { transform: rotate(80deg); }
+        .neu2-group .neu2-bar:nth-child(6) { transform: rotate(100deg); }
+        .neu2-group .neu2-bar:nth-child(7) { transform: rotate(120deg); }
+        .neu2-group .neu2-bar:nth-child(8) { transform: rotate(140deg); }
+        .neu2-group .neu2-bar:nth-child(9) { transform: rotate(160deg); }
+
+        .neu2-group:nth-child(2) .neu2-track:nth-child(1) { transform: rotate(0deg); }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(2) { transform: rotate(20deg); }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(3) { transform: rotate(40deg); }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(4) { transform: rotate(60deg); }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(5) { transform: rotate(80deg); }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(6) { transform: rotate(100deg); }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(7) { transform: rotate(120deg); }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(8) { transform: rotate(140deg); }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(9) { transform: rotate(160deg); }
+
+        .neu2-group:nth-child(2) .neu2-track:nth-child(1) .neu2-ball { animation-delay: 0s; }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(2) .neu2-ball { animation-delay: 0.2s; }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(3) .neu2-ball { animation-delay: 0.4s; }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(4) .neu2-ball { animation-delay: 0.6s; }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(5) .neu2-ball { animation-delay: 0.8s; }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(6) .neu2-ball { animation-delay: 1s; }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(7) .neu2-ball { animation-delay: 1.2s; }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(8) .neu2-ball { animation-delay: 1.4s; }
+        .neu2-group:nth-child(2) .neu2-track:nth-child(9) .neu2-ball { animation-delay: 1.6s; }
+
+        @keyframes neu2-move {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(76px); }
+            100% { transform: translateY(0); }
+        }
+
+        .neu-toggle {
+            position: relative;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #2d2d32;
+            color: #c1c6d7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow:
+                6px 6px 12px #1f1f23,
+                -6px -6px 12px #3b3b41,
+                inset 0 2px 4px -1px rgba(255, 255, 255, 0.06),
+                inset 0 -2px 4px -1px rgba(0, 0, 0, 0.25);
+        }
+
+        .neu-toggle:hover {
+            color: #87CEFA;
+            box-shadow:
+                7px 7px 14px #1f1f23,
+                -7px -7px 14px #3b3b41,
+                inset 0 2px 4px -1px rgba(255, 255, 255, 0.08),
+                inset 0 -2px 4px -1px rgba(0, 0, 0, 0.25);
+        }
+
+        .neu-toggle:active {
+            box-shadow:
+                inset 5px 5px 10px #1f1f23,
+                inset -5px -5px 10px #3b3b41,
+                inset 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .neu-toggle.is-on {
+            color: #87CEFA;
+            box-shadow:
+                inset 5px 5px 10px #1f1f23,
+                inset -5px -5px 10px #3b3b41,
+                inset 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
         #status-panel {
+            background: #2d2d32;
+            border-radius: 22px;
+            box-shadow: 8px 8px 16px #1f1f23, -8px -8px 16px #3b3b41;
             opacity: 0;
             transform: translateY(12px) scale(0.98);
             pointer-events: none;
             transition: opacity 220ms ease, transform 220ms ease, visibility 220ms ease;
             visibility: hidden;
+        }
+
+        #status-panel .status-accent {
+            background: #87CEFA;
         }
 
         #status-panel.is-visible {
@@ -183,7 +488,7 @@
         select.input-well {
             appearance: none;
             -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23adc6ff' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238DDCDC' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 0.75rem center;
             padding-right: 2.5rem;
@@ -197,13 +502,13 @@
         input.input-well:focus,
         select.input-well:focus {
             outline: none;
-            border-color: #adc6ff;
+            border-color: #87CEFA;
             background-color: rgba(75, 142, 255, 0.32) !important;
             box-shadow: 0 0 15px rgba(173, 198, 255, 0.25);
         }
 
         .input-well:focus-within {
-            border-color: #adc6ff;
+            border-color: #87CEFA;
             box-shadow: 0 0 15px rgba(173, 198, 255, 0.2);
         }
 
@@ -317,9 +622,9 @@
             opacity: 1;
         }
 
-        #status-panel[data-state="busy"] { border-left-color: #74d1ff; }
-        #status-panel[data-state="running"] { border-left-color: #4caf50; }
-        #status-panel[data-state="error"] { border-left-color: #ffb4ab; }
+        #status-panel[data-state="busy"] .status-accent { background: #87CEFA; }
+        #status-panel[data-state="running"] .status-accent { background: #4caf50; }
+        #status-panel[data-state="error"] .status-accent { background: #ffb4ab; }
 
         /* Static page-level UI element reveal animation */
         .page-ui {
@@ -332,130 +637,762 @@
             transform: translateY(0);
         }
 
-        .nav-btn {
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-        .nav-btn::before {
-            content: '';
+        .panorama-container {
             position: absolute;
-            top: 0; left: 0; bottom: 0;
-            width: 0%;
-            background: rgba(255, 255, 255, 0.08);
-            border-left: 2px solid #adc6ff;
-            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: -1;
+            inset: 0;
+            perspective: 512px;
+            perspective-origin: 50% 50%;
+            overflow: hidden;
         }
-        .nav-btn.active {
-            color: #adc6ff !important;
-            font-weight: 700;
+
+        .panorama-scene {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            transform-style: preserve-3d;
+            transform: translateZ(512px);
+            animation: panorama-rotate 180s linear infinite;
         }
-        .nav-btn.active::before {
+
+        .panorama-face {
+            position: absolute;
+            width: 1024px;
+            height: 1024px;
+            left: -512px;
+            top: -512px;
+            backface-visibility: hidden;
+            overflow: hidden;
+            will-change: transform;
+        }
+
+        .panorama-face img {
             width: 100%;
+            height: 100%;
+            object-fit: cover;
+            user-select: none;
+            -webkit-user-drag: none;
         }
-        .nav-btn:not(.active):hover {
+
+        .panorama-back img {
+            transform: scaleX(-1);
+        }
+
+        .panorama-front  { transform: translateZ(512px) rotateY(180deg) scaleX(-1) scale(1.004); }
+        .panorama-back   { transform: translateZ(-512px) scale(1.004); }
+        .panorama-right  { transform: rotateY(90deg) translateZ(512px) rotateY(180deg) scaleX(-1) scale(1.004); }
+        .panorama-left   { transform: rotateY(-90deg) translateZ(512px) rotateY(180deg) scaleX(-1) scale(1.004); }
+        .panorama-top    { transform: rotateX(-90deg) translateZ(512px) rotateX(180deg) scaleY(-1) scale(1.004); }
+        .panorama-bottom { transform: rotateX(90deg) translateZ(512px) rotateX(180deg) scaleY(-1) scale(1.004); }
+
+        @keyframes panorama-rotate {
+            0%   { transform: translateZ(512px) rotateY(0deg) rotateX(-2deg); }
+            50%  { transform: translateZ(512px) rotateY(-180deg) rotateX(2deg); }
+            100% { transform: translateZ(512px) rotateY(-360deg) rotateX(-2deg); }
+        }
+
+        .neu-side {
+            background: #2d2d32;
+            box-shadow: 12px 0 30px rgba(0,0,0,0.4);
+        }
+        .neu-logo-box {
+            background: #2d2d32;
+            border-radius: 50px;
+            box-shadow: 6px 6px 12px #19191d, -6px -6px 12px #3b3b41;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px 8px 8px;
+        }
+        .neu-nav {
+            background: #2d2d32;
+            border-radius: 8px;
+            box-shadow: 5px 5px 10px #19191d, -5px -5px 10px #3b3b41;
+            padding: 11px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c1c6d7;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: box-shadow 0.2s, color 0.2s, background 0.2s;
+        }
+        .neu-nav:hover:not(.active) {
+            box-shadow: 2px 2px 6px #19191d, -2px -2px 6px #3b3b41;
             color: #e4e2e4;
         }
-        .nav-btn:not(.active):hover::before {
+        .neu-nav.active {
+            background: #2a2a2f;
+            box-shadow: inset 4px 4px 10px #19191d, inset -4px -4px 10px #3b3b41;
+            color: #87CEFA;
+            font-weight: 700;
+        }
+        .neu-card-sm {
+            background: #2d2d32;
+            border-radius: 14px;
+            box-shadow: 6px 6px 12px #19191d, -6px -6px 12px #3b3b41;
+            transition: box-shadow 0.2s, transform 0.1s;
+            cursor: pointer;
+        }
+        .neu-card-sm:hover {
+            box-shadow: 2px 2px 6px #19191d, -2px -2px 6px #3b3b41;
+            transform: translateY(-1px);
+        }
+        .neu-card-sm:active {
+            box-shadow: inset 3px 3px 8px #19191d, inset -3px -3px 8px #3b3b41;
+            transform: translateY(0);
+        }
+        .neu-play {
+            --primary: #87CEFA;
+            --neutral-1: #2d2d32;
+            --neutral-2: #242428;
+            --radius: 14px;
             width: 100%;
-            border-left-width: 0px;
-            background: rgba(255, 255, 255, 0.03);
+            margin-top: 14px;
+            cursor: pointer;
+            border-radius: var(--radius);
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+            border: none;
+            box-shadow: 0 0.5px 0.5px 1px rgba(0, 0, 0, 0.2),
+                0 10px 20px rgba(0, 0, 0, 0.2), 0 4px 5px 0px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 20px;
+            height: 68px;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #ffffff;
+            background: var(--neutral-1);
+        }
+        .neu-play:not(:disabled):hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 1px 2px rgba(173, 198, 255, 0.35),
+                0 15px 30px rgba(0, 0, 0, 0.3), 0 10px 3px -3px rgba(0, 0, 0, 0.04);
+        }
+        .neu-play:not(:disabled):active {
+            transform: scale(1);
+            box-shadow: 0 0 1px 2px rgba(173, 198, 255, 0.35),
+                0 10px 3px -3px rgba(0, 0, 0, 0.2);
+        }
+        .neu-play::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius);
+            border: 2.5px solid transparent;
+            background: linear-gradient(var(--neutral-1), var(--neutral-2)) padding-box,
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.45)) border-box;
+            z-index: 0;
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+        .neu-play:not(:disabled):hover::after {
+            transform: scale(1.05, 1.1);
+            box-shadow: inset 0 -1px 3px 0 rgba(50, 50, 50, 1);
+        }
+        .neu-play::before {
+            content: "";
+            inset: 7px 6px 6px 6px;
+            position: absolute;
+            background: linear-gradient(to top, var(--neutral-1), var(--neutral-2));
+            border-radius: 30px;
+            filter: blur(0.5px);
+            z-index: 2;
+            pointer-events: none;
+        }
+        #btn-play-content {
+            position: relative;
+            z-index: 3;
+        }
+        .neu-play:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+        .neu-settings-box {
+            background: #2d2d32;
+            border-radius: 50px;
+            box-shadow: 20px 20px 60px #19191d, -20px -20px 60px #3b3b41;
+        }
+        .neu-modal-box {
+            background: #2d2d32;
+            border-radius: 50px;
+            box-shadow: 20px 20px 60px #19191d, -20px -20px 60px #3b3b41;
+        }
+        .neu-modal-close {
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 10px;
+            background: #2d2d32;
+            box-shadow: 8px 8px 16px #19191d, -8px -8px 16px #3b3b41;
+            color: #c1c6d7;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .neu-modal-close:hover {
+            box-shadow: inset 5px 5px 10px #19191d, inset -5px -5px 10px #3b3b41;
+            color: #e4e2e4;
+        }
+        .neu-tripple {
+            background: #2d2d32;
+            border-radius: 15px;
+            box-shadow: 8px 8px 16px #19191d, -8px -8px 16px #3b3b41;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            padding: 4px;
+        }
+        .neu-tripple-btn {
+            background-color: #2d2d32;
+            border: none;
+            border-radius: 10px;
+            box-shadow: inset 5px 5px 5px #19191d, inset -5px -5px 5px #3b3b41;
+            color: #c1c6d7;
+            cursor: pointer;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            margin: 3px;
+            padding: 12px;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+        .neu-tripple-btn:hover {
+            box-shadow: none;
+        }
+        .neu-tripple-btn.active {
+            background: #87CEFA;
+            color: #1a1a1e;
+            box-shadow: none;
+        }
+        .neu-confirm {
+            --primary: #9adf8e;
+            --neutral-1: #2d2d32;
+            --neutral-2: #242428;
+            --radius: 14px;
+            width: 100%;
+            cursor: pointer;
+            border-radius: var(--radius);
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+            border: none;
+            box-shadow: 0 0.5px 0.5px 1px rgba(0, 0, 0, 0.2),
+                0 10px 20px rgba(0, 0, 0, 0.2), 0 4px 5px 0px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 20px;
+            height: 68px;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #ffffff;
+            background: var(--neutral-1);
+        }
+        .neu-confirm:not(:disabled):hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 1px 2px rgba(154, 223, 142, 0.35),
+                0 15px 30px rgba(0, 0, 0, 0.3), 0 10px 3px -3px rgba(0, 0, 0, 0.04);
+        }
+        .neu-confirm:not(:disabled):active {
+            transform: scale(1);
+            box-shadow: 0 0 1px 2px rgba(154, 223, 142, 0.35),
+                0 10px 3px -3px rgba(0, 0, 0, 0.2);
+        }
+        .neu-confirm::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius);
+            border: 2.5px solid transparent;
+            background: linear-gradient(var(--neutral-1), var(--neutral-2)) padding-box,
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.45)) border-box;
+            z-index: 0;
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+        .neu-confirm:not(:disabled):hover::after {
+            transform: scale(1.05, 1.1);
+            box-shadow: inset 0 -1px 3px 0 rgba(50, 50, 50, 1);
+        }
+        .neu-confirm::before {
+            content: "";
+            inset: 7px 6px 6px 6px;
+            position: absolute;
+            background: linear-gradient(to top, var(--neutral-1), var(--neutral-2));
+            border-radius: 30px;
+            filter: blur(0.5px);
+            z-index: 2;
+            pointer-events: none;
+        }
+        .neu-confirm>span {
+            position: relative;
+            z-index: 3;
+        }
+        .neu-confirm:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+        .neu-primary-btn {
+            --primary: #87CEFA;
+            --neutral-1: #2d2d32;
+            --neutral-2: #242428;
+            --radius: 14px;
+            width: 100%;
+            cursor: pointer;
+            border-radius: var(--radius);
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+            border: none;
+            box-shadow: 0 0.5px 0.5px 1px rgba(0, 0, 0, 0.2),
+                0 10px 20px rgba(0, 0, 0, 0.2), 0 4px 5px 0px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 20px;
+            height: 68px;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #ffffff;
+            background: var(--neutral-1);
+        }
+        .neu-primary-btn:not(:disabled):hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 1px 2px rgba(173, 198, 255, 0.35),
+                0 15px 30px rgba(0, 0, 0, 0.3), 0 10px 3px -3px rgba(0, 0, 0, 0.04);
+        }
+        .neu-primary-btn:not(:disabled):active {
+            transform: scale(1);
+            box-shadow: 0 0 1px 2px rgba(173, 198, 255, 0.35),
+                0 10px 3px -3px rgba(0, 0, 0, 0.2);
+        }
+        .neu-primary-btn::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius);
+            border: 2.5px solid transparent;
+            background: linear-gradient(var(--neutral-1), var(--neutral-2)) padding-box,
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.45)) border-box;
+            z-index: 0;
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+        .neu-primary-btn:not(:disabled):hover::after {
+            transform: scale(1.05, 1.1);
+            box-shadow: inset 0 -1px 3px 0 rgba(50, 50, 50, 1);
+        }
+        .neu-primary-btn::before {
+            content: "";
+            inset: 7px 6px 6px 6px;
+            position: absolute;
+            background: linear-gradient(to top, var(--neutral-1), var(--neutral-2));
+            border-radius: 30px;
+            filter: blur(0.5px);
+            z-index: 2;
+            pointer-events: none;
+        }
+        .neu-primary-btn>span {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .neu-primary-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+        .neu-soft-btn {
+            background-color: #2d2d32;
+            border: none;
+            color: #e4e2e4;
+            cursor: pointer;
+            border-radius: 14px;
+            box-shadow: 10px 10px 20px #19191d, -10px -10px 20px #3b3b41;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+        }
+        .neu-soft-btn:hover {
+            color: #87CEFA;
+            box-shadow: 8px 8px 16px #19191d, -8px -8px 16px #3b3b41;
+        }
+        .neu-soft-btn:active {
+            box-shadow: inset 6px 6px 12px #19191d, inset -6px -6px 12px #3b3b41;
+        }
+        .neu-danger-btn {
+            background-color: transparent;
+            border: none;
+            color: #ff8f8f;
+            cursor: pointer;
+            border-radius: 12px;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+        .neu-danger-btn:hover {
+            background-color: rgba(255, 92, 92, 0.12);
+            color: #ffb4b4;
+        }
+        .neu-danger-btn:active {
+            box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.35), inset -4px -4px 10px rgba(255, 255, 255, 0.03);
+        }
+        .neu-input-container {
+            display: flex;
+            background: linear-gradient(173deg, #34343a 0%, #26262a 100%);
+            border-radius: 1rem;
+            box-shadow: 10px 10px 20px #19191d, -10px -10px 20px #3b3b41;
+            padding: 0.3rem;
+            gap: 0.3rem;
+        }
+        .neu-input-container input,
+        .neu-input-container textarea,
+        .neu-input-container select {
+            border-radius: 0.8rem;
+            background: #26262b;
+            box-shadow: inset 5px 5px 10px #19191d, inset -5px -5px 10px #3b3b41;
+            width: 100%;
+            flex-basis: 100%;
+            padding: 1rem;
+            border: 1px solid transparent;
+            color: #e4e2e4;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 14px;
+            transition: all 0.2s ease-in-out;
+        }
+        .neu-input-container select {
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23c1c6d7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 44px;
+        }
+        .neu-input-container textarea {
+            resize: none;
+        }
+        .neu-input-container input::placeholder,
+        .neu-input-container textarea::placeholder {
+            color: #8f94a3;
+        }
+        .neu-input-container input:focus,
+        .neu-input-container textarea:focus,
+        .neu-input-container select:focus {
+            border: 1px solid #87CEFA;
+            outline: none;
+        }
+        .neu-switch-box {
+            position: relative;
+            width: 104px;
+            height: 42px;
+            background: #26262b;
+            border-radius: 50px;
+            box-shadow: inset -8px -8px 16px #3b3b41, inset 8px 8px 16px #19191d;
+            flex-shrink: 0;
+        }
+        .neu-switch-box input {
+            display: none;
+        }
+        .neu-switch-track {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: translateY(-50%);
+            border-radius: 50px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .neu-switch-knob {
+            position: absolute;
+            width: 56px;
+            height: 36px;
+            background: linear-gradient(145deg, #35353b, #242429);
+            border-radius: 50px;
+            top: 3px;
+            left: 3px;
+            box-shadow: -4px -4px 8px #3b3b41, 4px 4px 8px #19191d;
+            transition: all 0.3s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 8px;
+        }
+        .neu-switch-led {
+            width: 8px;
+            height: 8px;
+            background: #55555c;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+        }
+        .neu-switch-box input:checked + .neu-switch-track .neu-switch-knob {
+            left: 45px;
+            background: linear-gradient(145deg, #3f3f45, #2e2e34);
+            box-shadow: -4px -4px 8px #3b3b41, 4px 4px 8px #141418;
+        }
+        .neu-switch-box input:checked + .neu-switch-track .neu-switch-led {
+            background: #87CEFA;
+            box-shadow: 0 0 15px 4px rgba(173, 198, 255, 0.5);
+        }
+        .neu-switch-track:hover .neu-switch-knob {
+            box-shadow: -4px -4px 12px #3b3b41, 4px 4px 12px #141418;
+        }
+        .neu-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 14px;
+            border-radius: 50px;
+            background:
+                linear-gradient(to right, rgba(173, 198, 255, 0.4), rgba(173, 198, 255, 0.4)) 0 0 / var(--fill, 75%) 100% no-repeat,
+                #2d2d32;
+            box-shadow: inset 4px 4px 8px #19191d, inset -4px -4px 8px #3b3b41;
+            outline: none;
+            cursor: pointer;
+        }
+        .neu-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #2d2d32;
+            box-shadow: 4px 4px 8px #19191d, -4px -4px 8px #3b3b41;
+            cursor: pointer;
+            border: none;
+            transition: box-shadow 0.2s;
+        }
+        .neu-slider::-webkit-slider-thumb:hover {
+            box-shadow: 2px 2px 5px #19191d, -2px -2px 5px #3b3b41;
+        }
+        .neu-slider::-webkit-slider-thumb:active {
+            box-shadow: inset 3px 3px 6px #19191d, inset -3px -3px 6px #3b3b41;
+        }
+        .neu-slider::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #2d2d32;
+            box-shadow: 4px 4px 8px #19191d, -4px -4px 8px #3b3b41;
+            cursor: pointer;
+            border: none;
+        }
+        .neu-slider::-moz-range-track {
+            background: transparent;
+        }
+        .neu-page-title {
+            display: inline-flex;
+            align-items: center;
+            background: #2d2d32;
+            border-radius: 50px;
+            box-shadow: 8px 8px 16px #19191d, -8px -8px 16px #3b3b41;
+            padding: 8px 26px;
+        }
+        .neu-bar-box {
+            background: #2d2d32;
+            border-radius: 18px;
+            box-shadow: 10px 10px 20px #19191d, -10px -10px 20px #3b3b41;
+            padding: 16px 20px;
+        }
+        .neu-tab {
+            position: relative;
+            border-radius: 14px;
+            background: #2d2d32;
+            padding: 9px 18px;
+            color: #c1c6d7;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 15px 25px -4px rgba(0, 0, 0, 0.5),
+                inset 0 -3px 4px -1px rgba(0, 0, 0, 0.2),
+                0 -10px 15px -1px rgba(255, 255, 255, 0.06),
+                inset 0 3px 4px -1px rgba(255, 255, 255, 0.15),
+                inset 0 0 5px 1px rgba(255, 255, 255, 0.08),
+                inset 0 20px 30px 0 rgba(255, 255, 255, 0.05);
+        }
+        .neu-tab:hover:not(.active) {
+            color: #e4e2e4;
+        }
+        .neu-tab:active:not(.active) {
+            filter: blur(0.5px);
+            box-shadow: 0 12px 25px -4px rgba(0, 0, 0, 0.4),
+                inset 0 -8px 30px 1px rgba(255, 255, 255, 0.08),
+                0 -10px 15px -1px rgba(255, 255, 255, 0.06),
+                inset 0 8px 25px 0 rgba(0, 0, 0, 0.4),
+                inset 0 0 10px 1px rgba(255, 255, 255, 0.06);
+        }
+        .neu-tab.active {
+            filter: blur(0.5px);
+            color: #87CEFA;
+            box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.4),
+                inset 0 -8px 25px -1px rgba(255, 255, 255, 0.06),
+                0 -10px 15px -1px rgba(255, 255, 255, 0.05),
+                inset 0 8px 20px 0 rgba(0, 0, 0, 0.4),
+                inset 0 0 5px 1px rgba(255, 255, 255, 0.06);
+        }
+        .neu-page-btn {
+            position: relative;
+            border-radius: 14px;
+            background: #2d2d32;
+            padding: 9px 20px;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #e4e2e4;
+            cursor: pointer;
+            transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 15px 25px -4px rgba(0, 0, 0, 0.5),
+                inset 0 -3px 4px -1px rgba(0, 0, 0, 0.2),
+                0 -10px 15px -1px rgba(255, 255, 255, 0.06),
+                inset 0 3px 4px -1px rgba(255, 255, 255, 0.15),
+                inset 0 0 5px 1px rgba(255, 255, 255, 0.08),
+                inset 0 20px 30px 0 rgba(255, 255, 255, 0.05);
+        }
+        .neu-page-btn:hover:not(:disabled) {
+            color: #87CEFA;
+        }
+        .neu-page-btn:active:not(:disabled) {
+            filter: blur(0.5px);
+            box-shadow: 0 12px 25px -4px rgba(0, 0, 0, 0.4),
+                inset 0 -8px 30px 1px rgba(255, 255, 255, 0.08),
+                0 -10px 15px -1px rgba(255, 255, 255, 0.06),
+                inset 0 8px 25px 0 rgba(0, 0, 0, 0.4),
+                inset 0 0 10px 1px rgba(255, 255, 255, 0.06);
+        }
+        .neu-page-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        .neu-page-box {
+            background: #2d2d32;
+            border-radius: 14px;
+            box-shadow: 6px 6px 12px #19191d, -6px -6px 12px #3b3b41;
+            padding: 7px 16px;
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #c1c6d7;
+            text-align: center;
+            min-width: 76px;
         }
     </style>
 </head>
 <body class="h-screen w-screen relative font-body-md text-body-md overflow-hidden bg-background">
-<!-- Background Image -->
+<!-- Panorama Background (Minecraft cube map) -->
 <div class="absolute inset-0 z-0">
-<img alt="Background" class="w-full h-full object-cover" src="assets/photo.png"/>
-<div class="absolute inset-0 bg-black/20"></div>
+  <div class="panorama-container">
+    <div class="panorama-scene">
+      <div class="panorama-face panorama-front"><img src="assets/panorama/panorama_1.png" alt=""/></div>
+      <div class="panorama-face panorama-right"><img src="assets/panorama/panorama_2.png" alt=""/></div>
+      <div class="panorama-face panorama-back"><img src="assets/panorama/panorama_3.png" alt=""/></div>
+      <div class="panorama-face panorama-left"><img src="assets/panorama/panorama_0.png" alt=""/></div>
+      <div class="panorama-face panorama-top"><img src="assets/panorama/panorama_5.png" alt=""/></div>
+      <div class="panorama-face panorama-bottom"><img src="assets/panorama/panorama_4.png" alt=""/></div>
+    </div>
+  </div>
+  <div id="panorama-overlay" class="absolute inset-0 bg-black"></div>
 </div>
 <!-- Main Application Container -->
 <div class="relative z-10 flex h-full w-full">
 <!-- SideNavBar -->
-<nav class="glass-panel w-[280px] h-full shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col py-8 px-4 flex-shrink-0 z-20 titlebar-drag">
+<nav class="neu-side w-[280px] h-full flex flex-col py-6 px-5 flex-shrink-0 z-20 titlebar-drag">
 <!-- Header -->
-<div class="mb-10 px-2 flex items-center gap-3">
-<div class="w-10 h-10 rounded-xl bg-primary/20 border border-primary/30 flex items-center justify-center glow-effect overflow-hidden">
-  <img src="assets/icon.svg" alt="Aqua Launcher" class="w-full h-full object-cover" />
-</div>
-<div>
-<h1 class="font-headline-md text-headline-md font-bold text-on-surface text-[24px] leading-tight glow-text">Aqua Launcher</h1>
-<p class="font-label-sm text-label-sm text-on-surface-variant opacity-70">v1.0</p>
-</div>
+<div class="neu-logo-box mb-7">
+  <div class="w-10 h-10 rounded-xl neu-inset flex items-center justify-center overflow-hidden flex-shrink-0">
+    <img src="assets/logo.svg" alt="Aqua Launcher" class="w-full h-full object-cover" />
+  </div>
+  <div class="min-w-0">
+    <h1 class="font-headline-md text-[20px] font-bold text-on-surface leading-tight truncate">Aqua Launcher</h1>
+    <p class="font-label-sm text-[10px] text-on-surface-variant opacity-70">v3.0</p>
+  </div>
 </div>
 <!-- Navigation Links -->
-<div class="flex flex-col gap-2 flex-grow titlebar-no-drag pb-6">
-<a id="nav-home" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant transition-colors duration-300 cursor-pointer titlebar-no-drag">
-<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">home</span>
-<span>Home</span>
-</a>
-<a id="nav-modpacks" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant transition-colors duration-300 cursor-pointer titlebar-no-drag">
-<span class="material-symbols-outlined text-[20px]">package_2</span>
-<span>Modpacks</span>
-</a>
-<a id="nav-multiplayer" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant transition-colors duration-300 cursor-pointer titlebar-no-drag">
-<span class="material-symbols-outlined text-[20px]">public</span>
-<span>Multiplayer</span>
-</a>
-<a id="nav-settings" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant transition-colors duration-300 cursor-pointer titlebar-no-drag">
-<span class="material-symbols-outlined text-[20px]">settings</span>
-<span>Settings</span>
-</a>
+<div class="flex flex-col gap-3 flex-grow titlebar-no-drag pb-6">
+<a id="nav-home" class="neu-nav active titlebar-no-drag"><span>Home</span></a>
+<a id="nav-modpacks" class="neu-nav titlebar-no-drag"><span>Modpacks</span></a>
+<a id="nav-multiplayer" class="neu-nav titlebar-no-drag"><span>Multiplayer</span></a>
+<a id="nav-settings" class="neu-nav titlebar-no-drag"><span>Settings</span></a>
 </div>
 <!-- Configuration Area -->
 <div class="mt-auto mb-6 flex flex-col gap-4">
 <!-- Account Selection -->
-<div id="account-card" class="glass-card rounded-xl p-3 flex items-center justify-between cursor-pointer hover:bg-white/10 transition-colors titlebar-no-drag">
+<div id="account-card" class="neu-card-sm p-3 flex items-center justify-between titlebar-no-drag">
 <div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden flex items-center justify-center">
+<div class="w-8 h-8 rounded-full neu-inset overflow-hidden flex items-center justify-center">
 <img id="account-avatar" class="w-full h-full object-cover hidden" alt="Avatar"/>
 <span id="account-placeholder" class="material-symbols-outlined text-on-surface-variant text-[18px]">person</span>
 </div>
 <div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-on-surface-variant">Account</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Account</span>
 <span id="account-name" class="font-body-md text-sm font-semibold text-on-surface">Not signed in</span>
-<span id="account-type" class="font-label-sm text-[10px] text-on-surface-variant">Click to sign in</span>
+<span id="account-type" class="font-label-sm text-[10px] text-on-surface-variant opacity-70">Click to sign in</span>
 </div>
 </div>
 <span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
 </div>
 <!-- Version Selection -->
-<div id="version-card" class="glass-card rounded-xl p-3 flex items-center justify-between cursor-pointer hover:bg-white/10 transition-colors titlebar-no-drag">
+<div id="version-card" class="neu-card-sm p-3 flex items-center justify-between titlebar-no-drag">
 <div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-on-surface-variant">Version</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Version</span>
 <span id="version-label" class="font-body-md text-sm font-semibold text-on-surface flex items-center gap-2">
-                            Fabric 1.20.4
-                            <span id="version-badge" class="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-label-sm">READY</span>
-                            <span id="version-unavailable" class="px-2 py-0.5 rounded-full bg-error-container/40 text-error text-[10px] font-label-sm hidden">UNAVAILABLE</span>
+        Fabric 1.20.4
+        <span id="version-badge" class="neu-chip">READY</span>
+        <span id="version-unavailable" class="neu-chip hidden" style="color:#ffb4ab;">UNAVAILABLE</span>
 </span>
 </div>
 <span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
 </div>
-<!-- RAM Allocation -->
-<div class="input-well rounded-xl p-3 flex flex-col gap-1 titlebar-no-drag">
-<div class="flex justify-between items-center">
-<label class="font-label-sm text-label-sm text-on-surface-variant" for="ram-slider">Memory Allocation</label>
-<span id="ram-label" class="font-label-sm text-label-sm text-primary font-bold">8GB</span>
-</div>
-<input class="w-full h-1 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-primary" id="ram-slider" max="16" min="2" type="range" value="8"/>
-</div>
 <!-- PLAY Button -->
-<button id="btn-play" disabled class="w-full py-4 rounded-xl bg-gradient-to-b from-primary-container to-inverse-primary text-white font-bold font-headline-md tracking-wider shadow-[0_0_20px_rgba(75,142,255,0.4)] hover:shadow-[0_0_30px_rgba(75,142,255,0.6)] active:scale-[0.98] transition-all duration-200 mt-2 relative overflow-hidden group opacity-50 cursor-not-allowed titlebar-no-drag">
-<div class="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-<span id="btn-play-content" class="relative z-10 flex items-center justify-center gap-2">
+<button id="btn-play" disabled class="neu-play titlebar-no-drag">
+<span id="btn-play-content" class="flex items-center justify-center gap-2">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
-                        PLAY
-                    </span>
+        PLAY
+    </span>
 </button>
 </div>
 <!-- Footer -->
 <div class="flex items-center justify-between pt-4 border-t border-white/5">
-<span class="font-label-sm text-label-sm text-on-surface-variant">v1.0</span>
-<a class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">
-<span class="material-symbols-outlined text-[16px]">person</span>
-                    <span id="footer-username">Guest</span>
-                </a>
+<span class="font-label-sm text-label-sm text-on-surface-variant">v3.0</span>
+<a class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="https://github.com/yamanist0" target="_blank" title="yamanist0 on GitHub">
+<span class="material-symbols-outlined text-[16px]">link</span>
+    <span id="footer-username">yamanist0</span>
+</a>
 </div>
 </nav>
 <!-- Main Content Area (Empty to show aurora) -->
@@ -464,10 +1401,10 @@
 <!-- TopAppBar area (transparent) -->
 <header class="flex justify-end items-center w-full px-8 h-16 bg-transparent titlebar-drag relative z-50">
 <div class="flex items-center gap-4 titlebar-no-drag">
-<button id="btn-notifications" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-95" title="Toggle notifications">
+<button id="btn-notifications" class="neu-toggle" title="Toggle notifications">
 <span class="material-symbols-outlined">notifications</span>
 </button>
-    <button id="btn-topbar-settings" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-95" title="Settings">
+    <button id="btn-topbar-settings" class="neu-toggle" title="Settings">
 <span class="material-symbols-outlined">settings</span>
 </button>
 <div class="flex items-center gap-1 ml-2 pl-2 border-l border-white/10">
@@ -485,96 +1422,125 @@
 </header>
 <!-- Home View Content -->
 <div id="view-home-content" class="page-pane absolute left-0 right-0 top-[70px] bottom-0 px-10 z-0 overflow-y-auto pb-24 active">
-  <div id="active-modpack-panel" class="glass-card max-w-xl rounded-2xl p-6 hidden">
-    <div class="flex items-center gap-4 mb-4">
-      <div class="w-16 h-16 rounded-xl bg-primary/20 flex flex-shrink-0 items-center justify-center glow-effect shadow-[0_0_15px_rgba(75,142,255,0.4)] border border-primary/30">
-        <span class="material-symbols-outlined text-primary text-[32px]">extension</span>
+  <div id="active-modpack-panel" class="neu-card max-w-xl p-5 hidden">
+    <div class="flex items-start gap-4">
+      <div class="neu-image w-20 h-20 flex-shrink-0" style="--c1:#87CEFA;--c2:#5A9FD1">
+        <img id="active-pack-image" class="hidden" alt=""/>
+        <span class="material-symbols-outlined text-[36px] text-white/90" style="font-variation-settings: 'FILL' 1;">package_2</span>
       </div>
-      <div>
-        <h2 id="active-pack-title" class="font-headline-md text-2xl font-bold text-on-surface">Modpack</h2>
-        <p id="active-pack-desc" class="text-sm text-on-surface-variant">Description.</p>
+      <div class="flex-1 min-w-0 pt-0.5">
+        <span id="active-pack-badge" class="neu-chip mb-1">MODPACK</span>
+        <h2 id="active-pack-title" class="font-headline-md text-2xl font-bold text-on-surface leading-tight">Modpack</h2>
+        <p id="active-pack-desc" class="text-sm text-on-surface-variant mt-1">Description.</p>
       </div>
+      <button id="active-pack-close" title="Deselect modpack" class="neu-close flex-shrink-0 cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]">close</span>
+      </button>
     </div>
-    <button id="active-pack-close" title="Deselect modpack" class="absolute right-4 top-4 w-8 h-8 rounded-full glass-card flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"> 
-      <span class="material-symbols-outlined">close</span>
-    </button>
     
+    <div id="active-pack-details" class="flex flex-wrap gap-2 mt-4 hidden">
+        <span id="active-pack-loader" class="neu-chip uppercase font-bold" style="color:#87CEFA"></span>
+        <span id="active-pack-mc" class="neu-chip" style="color:#c1c6d7"></span>
+        <span id="active-pack-version" class="neu-chip" style="color:#c1c6d7"></span>
+    </div>
+
     <div id="active-pack-progress-container" class="mt-4 hidden titlebar-no-drag">
-       <div class="flex justify-between items-center mb-1">
+       <div class="flex justify-between items-center mb-2">
           <span id="active-pack-status-txt" class="font-label-sm text-[12px] text-primary">Downloading mods...</span>
           <span id="active-pack-status-pct" class="font-label-sm text-[12px] text-on-surface-variant">0%</span>
        </div>
-       <div class="h-2 w-full bg-surface-variant rounded-full overflow-hidden">
+       <div class="neu-inset h-2 w-full rounded-full overflow-hidden">
           <div id="active-pack-progress-bar" class="h-full bg-primary transition-all duration-300 w-0"></div>
        </div>
     </div>
-
-    <!-- Active Pack details -->
-    <div id="active-pack-details" class="flex gap-2 mt-4 hidden">
-        <span id="active-pack-loader" class="px-2 py-0.5 rounded border border-primary/30 bg-primary/10 text-primary text-[10px] font-label-sm uppercase font-bold"></span>
-        <span id="active-pack-mc" class="px-2 py-0.5 rounded border border-white/10 bg-surface-variant/50 text-on-surface-variant text-[10px] font-label-sm"></span>
-        <span id="active-pack-version" class="px-2 py-0.5 rounded border border-white/10 bg-surface-variant/50 text-on-surface-variant text-[10px] font-label-sm"></span>
-    </div>
   </div>
   <div id="home-modpack-carousel" class="relative mt-2">
-    <div class="flex items-center justify-between gap-4 mb-2">
+    <div class="flex items-center gap-3 mb-3">
+      <button id="toggle-home-modpacks" title="Show or hide section" class="w-10 h-10 rounded-xl neu-box-toggle flex-shrink-0 cursor-pointer"></button>
       <div>
-        <h2 class="font-headline-md text-2xl font-bold text-on-surface">Modpack Explorer</h2>
-        <p class="text-xs text-on-surface-variant">Browse compact modpacks in a slim horizontal carousel.</p>
+        <h2 class="font-headline-md text-xl font-bold text-on-surface leading-tight">Modpack Explorer</h2>
+        <p class="text-[11px] text-on-surface-variant">Browse compact modpacks in a slim horizontal carousel.</p>
       </div>
     </div>
-    <div class="relative">
-      <button id="home-modpack-prev" class="absolute left-0 top-0 bottom-0 z-10 w-10 rounded-full glass-card hidden flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-95">
+    <div id="home-modpack-body" class="relative">
+      <button id="home-modpack-prev" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full neu-btn hidden flex items-center justify-center">
         <span class="material-symbols-outlined text-[24px]">chevron_left</span>
       </button>
       <div id="home-modpack-loading" class="absolute inset-0 z-20 flex items-center justify-center bg-surface/80 backdrop-blur rounded-3xl">
         <span class="material-symbols-outlined animate-spin text-primary text-[28px]">sync</span>
       </div>
-      <div id="home-modpack-scroller" class="hidden flex gap-3 overflow-hidden pb-2 scroll-smooth hide-scrollbar pl-14 pr-14 py-2 rounded-[28px]">
+      <div id="home-modpack-scroller" class="hidden flex gap-3 overflow-hidden pb-2 scroll-smooth hide-scrollbar py-2 rounded-[28px]">
         <!-- Home modpack cards -->
       </div>
-      <button id="home-modpack-next" class="absolute right-0 top-0 bottom-0 z-10 w-10 rounded-full glass-card hidden flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-95">
+      <button id="home-modpack-next" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full neu-btn hidden flex items-center justify-center">
         <span class="material-symbols-outlined text-[24px]">chevron_right</span>
       </button>
     </div>
   </div>
 
   <div id="home-server-carousel" class="relative mt-2">
-    <div class="flex items-center justify-between gap-4 mb-2">
+    <div class="flex items-center gap-3 mb-3">
+      <button id="toggle-home-servers" title="Show or hide section" class="w-10 h-10 rounded-xl neu-box-toggle flex-shrink-0 cursor-pointer"></button>
       <div>
-        <h2 class="font-headline-md text-2xl font-bold text-on-surface">Minecraft Servers</h2>
-        <p class="text-xs text-on-surface-variant">Discover servers in a compact horizontal view.</p>
+        <h2 class="font-headline-md text-xl font-bold text-on-surface leading-tight">Minecraft Servers</h2>
+        <p class="text-[11px] text-on-surface-variant">Discover servers in a compact horizontal view.</p>
       </div>
     </div>
-    <div class="relative">
-      <button id="home-server-prev" class="absolute left-0 top-0 bottom-0 z-10 w-10 rounded-full glass-card hidden flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-95">
+    <div id="home-server-body" class="relative">
+      <button id="home-server-prev" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full neu-btn hidden flex items-center justify-center">
         <span class="material-symbols-outlined text-[24px]">chevron_left</span>
       </button>
       <div id="home-server-loading" class="absolute inset-0 z-20 flex items-center justify-center bg-surface/80 backdrop-blur rounded-3xl">
         <span class="material-symbols-outlined animate-spin text-primary text-[28px]">sync</span>
       </div>
-      <div id="home-server-scroller" class="hidden flex gap-3 overflow-hidden pb-2 scroll-smooth hide-scrollbar pl-14 pr-14 py-2 rounded-[28px]">
+      <div id="home-server-scroller" class="hidden flex gap-3 overflow-hidden pb-2 scroll-smooth hide-scrollbar py-2 rounded-[28px]">
         <!-- Home server cards -->
       </div>
-      <button id="home-server-next" class="absolute right-0 top-0 bottom-0 z-10 w-10 rounded-full glass-card hidden flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-95">
+      <button id="home-server-next" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full neu-btn hidden flex items-center justify-center">
         <span class="material-symbols-outlined text-[24px]">chevron_right</span>
       </button>
     </div>
   </div>
 
   <div id="home-news-carousel" class="relative mt-2">
-    <div class="flex items-center justify-between gap-4 mb-2">
+    <div class="flex items-center gap-3 mb-3">
+      <button id="toggle-home-news" title="Show or hide section" class="w-10 h-10 rounded-xl neu-box-toggle flex-shrink-0 cursor-pointer"></button>
       <div>
-        <h2 class="font-headline-md text-2xl font-bold text-on-surface">News</h2>
-        <p class="text-xs text-on-surface-variant">Latest Minecraft news and articles.</p>
+        <h2 class="font-headline-md text-xl font-bold text-on-surface leading-tight">News</h2>
+        <p class="text-[11px] text-on-surface-variant">Latest Minecraft news and articles.</p>
       </div>
     </div>
-    <div class="relative">
-      <div id="home-news-loading" class="absolute inset-0 z-20 flex items-center justify-center bg-surface/80 backdrop-blur rounded-3xl hidden">
-        <span class="material-symbols-outlined animate-spin text-primary text-[28px]">sync</span>
-      </div>
+    <div id="home-news-body" class="relative">
       <div id="home-news-list" class="flex flex-col gap-4">
         <!-- News items (vertical) -->
+      </div>
+      <div id="home-news-loading" class="hidden">
+        <div class="flex items-center justify-center py-6">
+          <div class="neu2-loader">
+            <div class="neu2-group">
+              <div class="neu2-bar"></div>
+              <div class="neu2-bar"></div>
+              <div class="neu2-bar"></div>
+              <div class="neu2-bar"></div>
+              <div class="neu2-bar"></div>
+              <div class="neu2-bar"></div>
+              <div class="neu2-bar"></div>
+              <div class="neu2-bar"></div>
+              <div class="neu2-bar"></div>
+            </div>
+            <div class="neu2-group">
+              <div class="neu2-track"><div class="neu2-ball"></div></div>
+              <div class="neu2-track"><div class="neu2-ball"></div></div>
+              <div class="neu2-track"><div class="neu2-ball"></div></div>
+              <div class="neu2-track"><div class="neu2-ball"></div></div>
+              <div class="neu2-track"><div class="neu2-ball"></div></div>
+              <div class="neu2-track"><div class="neu2-ball"></div></div>
+              <div class="neu2-track"><div class="neu2-ball"></div></div>
+              <div class="neu2-track"><div class="neu2-ball"></div></div>
+              <div class="neu2-track"><div class="neu2-ball"></div></div>
+            </div>
+          </div>
+        </div>
       </div>
       <div id="home-news-sentinel" class="h-8"></div>
     </div>
@@ -586,31 +1552,31 @@
 <div id="view-modpacks" class="page-pane hidden absolute inset-0 pt-20 px-8 pb-8 overflow-y-auto z-0 titlebar-no-drag">
   <div class="flex flex-col gap-4 mb-6">
     <div class="flex items-center justify-between page-ui">
-      <h2 class="font-headline-md text-3xl font-bold text-on-surface">Modpacks</h2>
+      <div class="neu-page-title">
+        <h2 class="font-headline-md text-3xl font-bold text-on-surface">Modpacks</h2>
+      </div>
       <div id="modpacks-loading" class="hidden text-primary">
         <span class="material-symbols-outlined animate-spin text-[24px]">sync</span>
       </div>
     </div>
-    <div class="flex items-center justify-between border-b border-white/10 pb-2 flex-wrap gap-2 page-ui">
-      <div class="flex gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
-        <button id="tab-mp-installed" data-mp-tab="installed" class="px-4 py-2 font-bold text-primary border-b-2 border-primary transition-colors whitespace-nowrap">Installed</button>
-        <button id="tab-mp-catalog" data-mp-tab="catalog" class="px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">Catalog</button>
-        <button id="tab-mp-modrinth" data-mp-tab="modrinth" class="px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">Modrinth</button>
-        <button id="tab-mp-curseforge" data-mp-tab="curseforge" class="px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">CurseForge</button>
+    <div class="neu-bar-box flex items-center justify-between gap-3 flex-wrap page-ui">
+      <div class="flex gap-2 w-full md:w-auto flex-wrap">
+        <button id="tab-mp-installed" data-mp-tab="installed" class="neu-tab active">Installed</button>
+        <button id="tab-mp-catalog" data-mp-tab="catalog" class="neu-tab">Catalog</button>
+        <button id="tab-mp-modrinth" data-mp-tab="modrinth" class="neu-tab">Modrinth</button>
+        <button id="tab-mp-curseforge" data-mp-tab="curseforge" class="neu-tab">CurseForge</button>
       </div>
       <div id="mp-platform-pagination" class="hidden flex items-center gap-2">
-        <button id="btn-mp-plat-prev" class="p-1 px-3 bg-white/5 rounded-lg text-on-surface hover:bg-white/10 transition disabled:opacity-50 disabled:cursor-not-allowed">
-          Prev
-        </button>
-        <span id="mp-plat-page-text" class="font-label-sm text-sm font-bold text-on-surface-variant w-20 text-center">Page 1</span>
-        <button id="btn-mp-plat-next" class="p-1 px-3 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition disabled:opacity-50 disabled:cursor-not-allowed">
-          Next
-        </button>
+        <button id="btn-mp-plat-prev" class="neu-page-btn">Prev</button>
+        <span id="mp-plat-page-text" class="neu-page-box">Page 1</span>
+        <button id="btn-mp-plat-next" class="neu-page-btn">Next</button>
       </div>
     </div>
     <div id="modpack-search-container" class="hidden relative mt-2 page-ui">
-      <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-      <input id="modpack-search-input" type="text" placeholder="Search for modpacks..." class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-on-surface focus:outline-none focus:border-primary transition-colors" />
+      <div class="neu-input-container">
+        <span class="material-symbols-outlined self-center text-on-surface-variant">search</span>
+        <input id="modpack-search-input" type="text" placeholder="Search for modpacks..."/>
+      </div>
     </div>
   </div>
   <div id="modpacks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-24 pb-12">
@@ -620,7 +1586,7 @@
 
 <!-- Settings View -->
 <div id="view-settings" class="page-pane hidden absolute inset-0 pt-20 px-8 pb-8 overflow-y-auto z-20 titlebar-no-drag">
-  <div class="max-w-3xl mx-auto glass-card rounded-2xl p-8 mt-4 page-ui">
+  <div class="max-w-3xl mx-auto neu-settings-box p-8 mt-4 page-ui">
     <h2 class="font-headline-md text-3xl font-bold text-on-surface mb-6">Settings</h2>
     
     <div class="flex flex-col gap-6">
@@ -628,35 +1594,81 @@
        <div>
          <label class="block font-bold text-on-surface mb-2">Launcher Password</label>
          <p class="text-sm text-on-surface-variant mb-2">Require a password to access the launcher (Leave empty to disable).</p>
-         <input id="setting-password" type="password" placeholder="Password" class="w-full input-well rounded-xl px-4 py-3 outline-none"/>
+         <div class="neu-input-container">
+           <input id="setting-password" type="password" placeholder="Password"/>
+         </div>
        </div>
 
        <!-- Modpack JSON URLs -->
        <div>
          <label class="block font-bold text-on-surface mb-2">Modpack Catalog URLs</label>
          <p class="text-sm text-on-surface-variant mb-2">Add URLs containing modpacks catalog definitions. One URL per line.</p>
-         <textarea id="setting-modpack-urls" rows="4" placeholder="https://example.com/modpacks.json" class="w-full input-well rounded-xl px-4 py-3 outline-none resize-none font-label-sm text-sm"></textarea>
+         <div class="neu-input-container">
+           <textarea id="setting-modpack-urls" rows="4" placeholder="https://example.com/modpacks.json"></textarea>
+         </div>
        </div>
 
        <!-- Custom Java Args -->
        <div>
          <label class="block font-bold text-on-surface mb-2">Custom Java Arguments</label>
          <p class="text-sm text-on-surface-variant mb-2">Extra JVM flags when starting the game.</p>
-         <input id="setting-java-args" type="text" placeholder="-XX:+UseG1GC" class="w-full input-well rounded-xl px-4 py-3 outline-none font-label-sm"/>
+         <div class="neu-input-container">
+           <input id="setting-java-args" type="text" placeholder="-XX:+UseG1GC"/>
+         </div>
+       </div>
+
+       <!-- Game Console Logs -->
+       <div>
+         <label class="block font-bold text-on-surface mb-2">Oyun Konsolu (Game Console)</label>
+         <p class="text-sm text-on-surface-variant mb-2">Isaretlerseniz oyun baslatilirken tum Java ciktisi ve hatalarinin akitildigi ayri bir konsol penceresi acilir. Oyun acilmiyorsa ("Minecraft closed." hatasi) burayi acip tekrar deneyin, gercek hatayi loglarda goreceksiniz.</p>
+         <label class="flex items-center gap-3 cursor-pointer select-none">
+           <span class="neu-switch-box">
+             <input id="setting-open-console" type="checkbox"/>
+             <span class="neu-switch-track"><span class="neu-switch-knob"><span class="neu-switch-led"></span></span></span>
+           </span>
+           <span class="text-on-surface">Baslatma sirasinda konsol penceresi ac</span>
+         </label>
+       </div>
+
+       <!-- Free Panorama -->
+       <div>
+         <label class="block font-bold text-on-surface mb-2">Free Panorama</label>
+         <p class="text-sm text-on-surface-variant mb-2">Isaretlerseniz panorama kendinden donmeyi birakir ve kamera mouse ibresiyle kontrol edilir. Mouse'u saga sola hareket ettirdikce yatay, yukari asagi hareket ettirdikce dikey donus saglanir.</p>
+         <label class="flex items-center gap-3 cursor-pointer select-none">
+           <span class="neu-switch-box">
+             <input id="setting-free-panorama" type="checkbox"/>
+             <span class="neu-switch-track"><span class="neu-switch-knob"><span class="neu-switch-led"></span></span></span>
+           </span>
+           <span class="text-on-surface">Serbest panorama (mouse ile kamera kontrolu)</span>
+         </label>
+       </div>
+
+       <!-- Panorama Darkness -->
+       <div>
+         <label class="block font-bold text-on-surface mb-2">Panorama Karartma (Darkness)</label>
+         <p class="text-sm text-on-surface-variant mb-2">Arka plandaki panorama efektinin koyuluk oranini ayarlar.</p>
+         <div class="flex items-center gap-3">
+           <input id="setting-panorama-dim" type="range" min="0" max="100" value="75" class="neu-slider"/>
+           <span id="setting-panorama-dim-value" class="font-label-sm text-primary font-bold w-10 text-right">75%</span>
+         </div>
        </div>
 
        <!-- Server List JSON URL -->
        <div>
          <label class="block font-bold text-on-surface mb-2">Server List JSON URL</label>
          <p class="text-sm text-on-surface-variant mb-2">Enter the URL for the server list JSON. This will be used for the multiplayer server browser.</p>
-         <input id="setting-server-list-url" type="text" placeholder="https://example.com/servers.json" class="w-full input-well rounded-xl px-4 py-3 outline-none font-label-sm"/>
+         <div class="neu-input-container">
+           <input id="setting-server-list-url" type="text" placeholder="https://example.com/servers.json"/>
+         </div>
        </div>
 
        <!-- CurseForge Proxy URL -->
        <div>
          <label class="block font-bold text-on-surface mb-2">CurseForge API Proxy URL</label>
          <p class="text-sm text-on-surface-variant mb-2">Enter the Cloudflare Worker URL for proxying CurseForge requests.</p>
-         <input id="setting-curseforge-proxy" type="text" placeholder="https://my-proxy.workers.dev" class="w-full input-well rounded-xl px-4 py-3 outline-none font-label-sm"/>
+         <div class="neu-input-container">
+           <input id="setting-curseforge-proxy" type="text" placeholder="https://my-proxy.workers.dev"/>
+         </div>
        </div>
 
        <!-- Save Button -->
@@ -673,41 +1685,45 @@
 <div id="view-multiplayer" class="page-pane hidden absolute inset-0 pt-20 px-8 pb-8 overflow-y-auto z-0 titlebar-no-drag">
   <div class="flex flex-col gap-4 mb-6">
     <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 page-ui">
-      <h2 class="font-headline-md text-3xl font-bold text-on-surface">Top Servers</h2>
+      <div class="neu-page-title">
+        <h2 class="font-headline-md text-3xl font-bold text-on-surface">Top Servers</h2>
+      </div>
       <div class="flex items-center gap-4 w-full md:w-auto">
-        <div class="relative w-full md:w-64">
-           <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
-           <input id="server-search-input" type="text" placeholder="Search servers by name or desc..." class="w-full bg-white/5 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-on-surface focus:outline-none focus:border-primary transition-colors text-sm" />
+        <div class="w-full md:w-72">
+          <div class="neu-input-container">
+            <span class="material-symbols-outlined self-center text-on-surface-variant text-[18px]">search</span>
+            <input id="server-search-input" type="text" placeholder="Search servers by name or desc..."/>
+          </div>
         </div>
         <div id="multiplayer-loading" class="hidden text-primary">
           <span class="material-symbols-outlined animate-spin text-[24px]">sync</span>
         </div>
       </div>
     </div>
-    <div class="flex flex-col md:flex-row items-center justify-between gap-3 page-ui">
+    <div class="neu-bar-box flex items-center justify-between gap-3 flex-wrap page-ui">
       <div class="flex items-center gap-2">
-        <button id="btn-mp-prev-top" class="px-4 py-2 rounded-lg bg-surface-variant hover:bg-white/10 text-on-surface flex gap-2 items-center opacity-50 cursor-not-allowed">
-           <span class="material-symbols-outlined">arrow_back</span>
+        <button id="btn-mp-prev-top" class="neu-page-btn flex items-center gap-2 opacity-50 cursor-not-allowed">
+           <span class="material-symbols-outlined text-[16px]">arrow_back</span>
            Prev
         </button>
-        <button id="btn-mp-next-top" class="px-4 py-2 rounded-lg bg-surface-variant hover:bg-white/10 text-on-surface flex gap-2 items-center">
+        <button id="btn-mp-next-top" class="neu-page-btn flex items-center gap-2">
            Next
-           <span class="material-symbols-outlined">arrow_forward</span>
+           <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
         </button>
       </div>
-      <span id="mp-page-text" class="text-on-surface-variant font-bold">Page 1</span>
+      <span id="mp-page-text" class="neu-page-box">Page 1</span>
     </div>
   </div>
   <div id="multiplayer-grid" class="grid grid-cols-1 gap-4 mb-6 pb-2">
       <!-- Servers inserted here -->
   </div>
-  <div class="flex items-center justify-between mt-auto titlebar-no-drag mb-24 pb-12">
-      <button id="btn-mp-prev" class="px-4 py-2 rounded-lg bg-surface-variant hover:bg-white/10 text-on-surface flex gap-2 items-center opacity-50 cursor-not-allowed">
-         <span class="material-symbols-outlined">arrow_back</span> Prev
+  <div class="neu-bar-box flex items-center justify-between gap-3 flex-wrap mt-auto mb-24 pb-12 titlebar-no-drag page-ui">
+      <button id="btn-mp-prev" class="neu-page-btn flex items-center gap-2 opacity-50 cursor-not-allowed">
+         <span class="material-symbols-outlined text-[16px]">arrow_back</span> Prev
       </button>
-      <span id="mp-page-text-bottom" class="text-on-surface-variant font-bold">Page 1</span>
-      <button id="btn-mp-next" class="px-4 py-2 rounded-lg bg-surface-variant hover:bg-white/10 text-on-surface flex gap-2 items-center">
-         Next <span class="material-symbols-outlined">arrow_forward</span>
+      <span id="mp-page-text-bottom" class="neu-page-box">Page 1</span>
+      <button id="btn-mp-next" class="neu-page-btn flex items-center gap-2">
+         Next <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
       </button>
   </div>
 </div>
@@ -725,61 +1741,65 @@
 </div>
 
 <!-- Bottom right contextual info -->
-<div id="status-panel" data-state="idle" class="absolute bottom-8 right-8 glass-card p-4 rounded-xl max-w-sm border-l-4 border-l-primary hidden md:block z-10 titlebar-no-drag">
-<h3 id="status-title" class="font-bold text-on-surface mb-1 flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-[18px]">info</span>
-                    Welcome to Aqua Launcher
-                </h3>
-<p id="status-message" class="text-sm text-on-surface-variant">Check your settings to launch Minecraft.</p>
+<div id="status-panel" data-state="idle" class="absolute bottom-8 right-8 p-4 pl-6 max-w-[300px] hidden md:block z-10 titlebar-no-drag">
+<div class="status-accent absolute left-3 top-1/2 -translate-y-1/2 w-1.5 h-10 rounded-full"></div>
+<h3 class="font-bold text-on-surface mb-1 flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">info</span>
+<span id="status-title" class="min-w-0 break-words leading-snug">Welcome to Aqua Launcher</span>
+</h3>
+<p id="status-message" class="text-sm text-on-surface-variant break-words leading-snug">Check your settings to launch Minecraft.</p>
 <div id="status-progress-wrap" class="hidden mt-3">
 <div class="h-1.5 bg-surface-variant rounded-full overflow-hidden">
 <div id="status-progress-bar" class="h-full bg-primary transition-[width] duration-200 ease-out" style="width: 0%"></div>
 </div>
-<p id="status-progress-detail" class="text-xs text-on-surface-variant mt-1.5"></p>
+<p id="status-progress-detail" class="text-xs text-on-surface-variant mt-1.5 break-words leading-snug"></p>
 </div>
       </main>
     </div>
 
 <!-- Account Modal -->
 <div id="account-modal" class="hidden fixed inset-0 z-50 modal-backdrop items-center justify-center titlebar-no-drag">
-<div class="glass-card rounded-2xl p-6 w-full max-w-md mx-4 border border-white/10 shadow-2xl">
+<div class="neu-modal-box p-8 w-full max-w-md mx-4">
 <div class="flex items-center justify-between mb-6">
 <h2 class="font-headline-md text-xl font-bold text-on-surface">Sign In</h2>
-<button data-close-modal="account-modal" class="window-btn titlebar-no-drag"><span class="material-symbols-outlined">close</span></button>
+<button data-close-modal="account-modal" class="neu-modal-close titlebar-no-drag"><span class="material-symbols-outlined !text-[18px]">close</span></button>
 </div>
-<button id="btn-ms-login" class="w-full py-3 rounded-xl bg-gradient-to-b from-primary-container to-inverse-primary text-white font-bold mb-4 flex items-center justify-center gap-2">
-<span class="material-symbols-outlined">login</span>
-Microsoft Account
-</button>
-<div class="relative my-4 text-center">
-<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-3 relative z-10">or offline</span>
-<div class="absolute inset-x-0 top-1/2 border-t border-white/10"></div>
+<button id="btn-ms-login" class="neu-primary-btn mb-5"><span><span class="material-symbols-outlined">login</span> Microsoft Account</span></button>
+<div class="relative my-5 text-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-[#2d2d32] px-3 relative z-10">or offline</span>
+<div class="absolute inset-x-0 top-1/2 border-t border-black/40"></div>
 </div>
-<input id="offline-username" type="text" placeholder="Username" class="w-full input-well rounded-xl px-4 py-3 mb-3 text-on-surface placeholder:text-on-surface-variant/50 outline-none"/>
-<button id="btn-offline-login" class="w-full py-3 rounded-xl glass-card hover:bg-white/10 font-semibold text-on-surface mb-3">Play Offline</button>
-<button id="btn-logout" class="w-full py-2 rounded-xl text-error text-sm hover:bg-error-container/20">Sign Out</button>
+<div class="neu-input-container mb-3">
+<input id="offline-username" type="text" placeholder="Username"/>
+</div>
+<button id="btn-offline-login" class="neu-soft-btn w-full py-3 font-semibold mb-3">Play Offline</button>
+<button id="btn-logout" class="neu-danger-btn w-full py-2">Sign Out</button>
 </div>
 </div>
 
 <!-- Version Modal -->
 <div id="version-modal" class="hidden fixed inset-0 z-50 modal-backdrop items-center justify-center titlebar-no-drag">
-<div class="glass-card rounded-2xl p-6 w-full max-w-lg mx-4 border border-white/10 shadow-2xl">
+<div class="neu-modal-box p-8 w-full max-w-lg mx-4">
 <div class="flex items-center justify-between mb-6">
 <h2 class="font-headline-md text-xl font-bold text-on-surface">Select Version</h2>
-<button data-close-modal="version-modal" class="window-btn"><span class="material-symbols-outlined">close</span></button>
+<button data-close-modal="version-modal" class="neu-modal-close"><span class="material-symbols-outlined !text-[18px]">close</span></button>
 </div>
-<div class="flex gap-2 mb-4">
-<button data-loader-tab="vanilla" class="flex-1 py-2 rounded-lg border text-on-surface-variant border-transparent transition-all duration-300">Vanilla</button>
-<button data-loader-tab="fabric" class="flex-1 py-2 rounded-lg border text-on-surface-variant border-transparent transition-all duration-300">Fabric</button>
-<button data-loader-tab="forge" class="flex-1 py-2 rounded-lg border text-on-surface-variant border-transparent transition-all duration-300">Forge</button>
+<div class="neu-tripple mb-5">
+<button data-loader-tab="vanilla" class="neu-tripple-btn active">Vanilla</button>
+<button data-loader-tab="fabric" class="neu-tripple-btn">Fabric</button>
+<button data-loader-tab="forge" class="neu-tripple-btn">Forge</button>
 </div>
 <label class="font-label-sm text-label-sm text-on-surface-variant block mb-2">Minecraft Version</label>
-<select id="mc-version-select" class="w-full input-well rounded-xl px-4 py-3 mb-4 text-on-surface outline-none cursor-pointer"></select>
+<div class="neu-input-container mb-4">
+<select id="mc-version-select" class="cursor-pointer"></select>
+</div>
 <div id="loader-version-row">
 <label class="font-label-sm text-label-sm text-on-surface-variant block mb-2">Loader Version</label>
-<select id="loader-version-select" class="w-full input-well rounded-xl px-4 py-3 mb-4 text-on-surface outline-none cursor-pointer"></select>
+<div class="neu-input-container mb-4">
+<select id="loader-version-select" class="cursor-pointer"></select>
 </div>
-<button id="btn-save-version" class="w-full py-3 rounded-xl bg-gradient-to-b from-primary-container to-inverse-primary text-white font-bold">Confirm</button>
+</div>
+<button id="btn-save-version" class="neu-confirm"><span>Confirm</span></button>
 </div>
 </div>
 

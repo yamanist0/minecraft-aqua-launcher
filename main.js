@@ -1,6 +1,6 @@
 const fs = require('fs');
 const https = require('https');
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const { LauncherService } = require('./services/launcher-service');
 const { ModpackService } = require('./services/modpack-service');
@@ -37,6 +37,29 @@ function createWindow() {
   });
 
   mainWindow.loadFile('launcher.html');
+
+  mainWindow.webContents.on('before-input-event', async (event, input) => {
+    if (input.control && input.shift && input.key.toLowerCase() === 'f') {
+      event.preventDefault();
+      try {
+        const image = await mainWindow.webContents.capturePage();
+        const buffer = image.toPNG();
+        const defaultPath = path.join(app.getPath('desktop'), `AquaLauncher_Screenshot_${Date.now()}.png`);
+        
+        const { filePath } = await dialog.showSaveDialog(mainWindow, {
+          title: 'Save Screenshot',
+          defaultPath,
+          filters: [{ name: 'Images', extensions: ['png'] }]
+        });
+        
+        if (filePath) {
+          fs.writeFileSync(filePath, buffer);
+        }
+      } catch (e) {
+        console.error('Screenshot failed:', e);
+      }
+    }
+  });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -88,6 +111,7 @@ function registerIpcHandlers() {
               modpackUrls: [],
               javaArgs: '',
               password: '',
+              openConsole: false,
               serverListUrl: 'https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/servers.json',
             },
             JSON.parse(fs.readFileSync(getSettingsPath(), 'utf8')),
@@ -98,6 +122,7 @@ function registerIpcHandlers() {
        modpackUrls: ['https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/modpacks.json'],
        javaArgs: '',
        password: '',
+       openConsole: false,
        serverListUrl: 'https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/servers.json',
      };
   });

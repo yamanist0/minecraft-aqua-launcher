@@ -1,0 +1,22 @@
+# build outputs
+dist/
+out/
+release/
+
+# dependencies
+node_modules/
+
+# git
+.git/
+
+# package lock
+package-lock.json
+
+# large binary assets
+assets/panorama/
+assets/icon.ico
+assets/photo.png
+images/
+
+# generated build scripts
+build.bat

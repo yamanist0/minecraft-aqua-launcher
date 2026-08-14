@@ -13,6 +13,7 @@ const {
 } = require('./loaders');
 const { getJavaInfo: fetchJavaInfo } = require('./java-detector');
 const { downloadJava } = require('./java-downloader');
+const { GameConsoleService } = require('./game-console');
 
 class LauncherService {
   constructor(sendEvent) {
@@ -22,6 +23,9 @@ class LauncherService {
     this.authPath = path.join(app.getPath('userData'), 'auth.json');
     this.mcRoot = path.join(app.getPath('userData'), '.minecraft');
     this.isLaunching = false;
+    this.console = null;
+    this.recentDebugLines = [];
+    this.lastStatus = null;
     this.setupClientEvents();
     fs.mkdirSync(this.mcRoot, { recursive: true });
     this.loadSavedAuth();
@@ -38,18 +42,74 @@ class LauncherService {
 
     for (const event of events) {
       this.client.on(event, (data) => {
-        this.sendEvent('launch-event', { type: event, data });
+        this.forwardClientEvent(event, data);
       });
     }
+
+    this.client.on('arguments', (args) => {
+      this.sendEvent('launch-event', { type: 'arguments', data: args });
+      const sanitized = (Array.isArray(args) ? args : [])
+        .map((arg) => {
+          if (/accessToken|clientToken|uuid|xuid/i.test(arg)) return '[REDACTED]';
+          return arg;
+        })
+        .join(' ');
+      this.console?.writeLine(`[ARGUMENTLER] java ${sanitized}`);
+    });
 
     this.client.on('close', (code) => {
       this.isLaunching = false;
       this.sendEvent('launch-event', { type: 'close', data: code });
-      this.sendEvent('launch-status', {
-        state: 'idle',
-        message: 'Minecraft closed.',
-      });
+
+      const startupFailure = this.recentDebugLines.find(
+        (line) =>
+          /couldn't start|failed to start|failed to run|unable to|invalid|error/i.test(line),
+      );
+
+      this.console?.writeLine('');
+      this.console?.writeLine(
+        `[INFO] Oyun kapandi. Cikis kodu: ${code === null || code === undefined ? 'bilinmiyor' : code}` +
+          (this.console?.logPath ? ` | Log: ${this.console.logPath}` : ''),
+      );
+
+      if (startupFailure) {
+        const reason = startupFailure.replace(/^\[MCLC\]:\s*/i, '').slice(0, 300);
+        this.sendEvent('launch-status', {
+          state: 'error',
+          message: `Minecraft acilamadi: ${reason}. Detaylar icin Ayarlar > "Oyun Konsolu" ozelligini acip tekrar deneyin.`,
+        });
+      } else {
+        this.sendEvent('launch-status', {
+          state: 'idle',
+          message: 'Minecraft closed.',
+        });
+      }
+
+      this.closeConsole();
     });
+  }
+
+  forwardClientEvent(event, data) {
+    const text = typeof data === 'string' ? data : String(data);
+
+    if (event === 'debug') {
+      this.recentDebugLines.push(text);
+      if (this.recentDebugLines.length > 200) this.recentDebugLines.shift();
+      this.console?.writeLine(`[MCLC] ${text}`);
+    } else if (event === 'data') {
+      // Game stdout/stderr — the actual reason things break at boot.
+      this.console?.writeChunk(text);
+    }
+
+    this.sendEvent('launch-event', { type: event, data });
+  }
+
+  async closeConsole() {
+    if (this.console) {
+      const consoleRef = this.console;
+      this.console = null;
+      await consoleRef.close();
+    }
   }
 
   loadSavedAuth() {
@@ -166,6 +226,7 @@ class LauncherService {
     forgeVersion,
     fabricLoaderVersion,
     javaArgs,
+    openConsole,
   }) {
     if (this.isLaunching) {
       throw new Error('A launch is already in progress');
@@ -175,10 +236,25 @@ class LauncherService {
     }
 
     this.isLaunching = true;
+    this.recentDebugLines = [];
     this.sendEvent('launch-status', {
       state: 'preparing',
       message: 'Preparing files...',
     });
+
+    if (openConsole) {
+      try {
+        this.console = new GameConsoleService(this.mcRoot);
+        this.console.open();
+        this.console.writeLine('');
+        this.console.writeLine(
+          `[BASLATILIYOR] loader=${loader} mcVersion=${mcVersion} loaderVersion=${fabricLoaderVersion || forgeVersion || 'auto'}`,
+        );
+      } catch (e) {
+        console.error('Failed to open game console', e);
+        this.console = null;
+      }
+    }
 
     try {
       const javaInfo = await fetchJavaInfo(mcVersion);
@@ -186,6 +262,17 @@ class LauncherService {
         const downloadedPath = await downloadJava(javaInfo.required, this.mcRoot, this.sendEvent.bind(this));
         javaInfo.selected = { version: javaInfo.required, path: downloadedPath };
       }
+
+      this.console?.writeLine(
+        `[JAVA] Kullanilan Java ${javaInfo.selected.version} -> ${javaInfo.selected.path}`,
+      );
+      this.console?.writeLine(
+        `[JAVA] Gerekli: ${javaInfo.required} | Kurulu: ${
+          javaInfo.installed.length
+            ? javaInfo.installed.map((j) => `v${j.version}`).join(', ')
+            : 'yok'
+        }`,
+      );
 
       this.sendEvent('launch-status', {
         state: 'preparing',
@@ -212,19 +299,24 @@ class LauncherService {
         state: 'launching',
         message: 'Starting Minecraft...',
       });
+      this.console?.writeLine('[BASLATILIYOR] Oyun Java ile baslatiliyor...');
 
       await this.client.launch(opts);
 
+      this.console?.writeLine('[DURUM] Surec baslatildi, oyun buyuk ihtimalle aciliyor...');
       this.sendEvent('launch-status', {
         state: 'running',
         message: 'Minecraft is running.',
       });
     } catch (error) {
       this.isLaunching = false;
+      const message = error?.message || 'Launch failed';
+      this.console?.writeLine(`[HATA] ${message}`);
       this.sendEvent('launch-status', {
         state: 'error',
-        message: error.message || 'Launch failed',
+        message,
       });
+      this.closeConsole();
       throw error;
     }
   }
