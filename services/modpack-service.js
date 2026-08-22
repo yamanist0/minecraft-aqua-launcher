@@ -216,7 +216,7 @@ class ModpackService {
                const destPath = path.join(packModsDir, fileName);
                await this.downloadFile(finalUrl, destPath);
             } catch (err) {
-               console.error(`Failed to download ${url}`, err);
+console.error(`Download error: ${url}`, err);
                // biri patlarsa digerleri devam etsin
             }
 
