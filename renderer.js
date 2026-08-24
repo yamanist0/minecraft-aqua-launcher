@@ -89,6 +89,7 @@ function escapeHtml(value) {
 }
 
 function serverDomId(ip) {
+  // replace dots and other weird characters with dashes so we can use it as an id
   return ip.replace(/[^a-zA-Z0-9]/g, '-');
 }
 
