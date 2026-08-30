@@ -56,7 +56,7 @@ function createWindow() {
           fs.writeFileSync(filePath, buffer);
         }
       } catch (e) {
-        console.error('Screenshot failed:', e);
+console.error("Screenshot error:", e);
       }
     }
   });
