@@ -40,6 +40,7 @@ export default {
     };
 
     if (request.method !== 'GET' && request.method !== 'HEAD') {
+      console.log('Body set for', request.method);
       init.body = request.body;
     }
 
