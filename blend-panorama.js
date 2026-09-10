@@ -24,6 +24,7 @@ function mix(a, b, t) {
 
 function bandWidth(y, h) {
     // ucgen: ust satirda MAX_BAND, altta 0 (dogrusal)
+    console.log("Debugging bandWidth - y:", y, "h:", h);
     return Math.round((MAX_BAND * (h - 1 - y)) / (h - 1));
 }
 
