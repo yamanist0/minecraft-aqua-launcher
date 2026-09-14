@@ -170,6 +170,7 @@ async function findInstalledJava() {
         ? javaPath.replace(/java\.exe$/i, 'javaw.exe')
         : javaPath;
       const target = fs.existsSync(normalized) ? normalized : javaPath;
+      console.log("Probing:", target);
       const info = await probeJava(target);
       if (!info) continue;
 
