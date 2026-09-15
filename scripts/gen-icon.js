@@ -48,6 +48,7 @@ function render(size) {
       if (inA(x, y)) c = LIGHT;
       const o = (j * ss + i) * 4;
       // TODO: check if buf has enough space for 4 bytes
+      // If c exists we write the rgb values and make alpha solid
       if (c) { buf[o] = c[0]; buf[o + 1] = c[1]; buf[o + 2] = c[2]; buf[o + 3] = 255; }
     }
   }
