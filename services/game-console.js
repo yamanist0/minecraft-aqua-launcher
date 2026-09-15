@@ -82,6 +82,7 @@ class GameConsoleService {
 
   writeChunk(text) {
     if (!this.stream) return;
+    console.log("writeChunk input:", text);
     const pieces = String(text).split(/\r?\n/);
     for (const piece of pieces) this.writeLine(piece);
   }
