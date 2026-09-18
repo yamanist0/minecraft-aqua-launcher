@@ -7,6 +7,7 @@ const MAX_BUFFERED_LINES = 3000;
 
 class GameConsoleService {
   constructor(root) {
+    console.log("Initializing constructor with root:", root);
     this.root = root;
     this.logPath = null;
     this.stream = null;
