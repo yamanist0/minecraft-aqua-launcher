@@ -191,6 +191,7 @@ class LauncherService {
     return fetchJavaInfo(mcVersion);
   }
 
+  // This function helps us preview the game version with the loader
   async previewVersion({ loader, mcVersion, loaderVersion }) {
     let resolvedLoaderVersion = loaderVersion;
 
