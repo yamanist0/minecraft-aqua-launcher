@@ -250,6 +250,7 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => {
+  // Quit the app on Windows and Linux but keep it open on Mac
   if (process.platform !== 'darwin') {
     app.quit();
   }
