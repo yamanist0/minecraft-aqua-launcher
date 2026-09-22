@@ -31,6 +31,7 @@ function parseJavaVersion(output) {
   if (!match) return null;
 
   const parts = match[1].split('.').map((part) => Number(part));
+  // handle old java versions like 1.8
   if (parts[0] === 1 && parts.length > 1) {
     return parts[1];
   }
