@@ -37,6 +37,7 @@ function save(png, name) {
 }
 
 function copyFile(src, dst) {
+    console.log('Copying:', src, 'to', dst);
     fs.copyFileSync(src, dst);
 }
 
