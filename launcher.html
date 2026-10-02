@@ -747,6 +747,191 @@
             box-shadow: inset 3px 3px 8px #19191d, inset -3px -3px 8px #3b3b41;
             transform: translateY(0);
         }
+        .neu-square-btn {
+            background: #2d2d32;
+            border: none;
+            border-radius: 14px;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c1c6d7;
+            cursor: pointer;
+            box-shadow: 6px 6px 12px #19191d, -6px -6px 12px #3b3b41;
+            transition: box-shadow 0.2s, color 0.2s;
+        }
+        .neu-square-btn:hover {
+            color: #87CEFA;
+            box-shadow: 2px 2px 6px #19191d, -2px -2px 6px #3b3b41;
+        }
+        .neu-square-btn:active {
+            box-shadow: inset 3px 3px 8px #19191d, inset -3px -3px 8px #3b3b41;
+        }
+        #btn-version-minus .material-symbols-outlined {
+            transform: rotate(-90deg);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #btn-version-minus.active .material-symbols-outlined {
+            transform: rotate(90deg);
+        }
+        .version-knob-panel {
+            position: absolute;
+            left: calc(100% + 14px);
+            top: 50%;
+            width: 230px;
+            height: 230px;
+            z-index: 60;
+            opacity: 0;
+            transform: translateY(-50%) translateX(-16px);
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
+        }
+        .version-knob-panel.open {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+            visibility: visible;
+            pointer-events: auto;
+        }
+        #version-knob-panel .knob-de {
+            user-select: none;
+            position: absolute;
+            inset: 0;
+            width: 230px;
+            height: 230px;
+            border-radius: 100%;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.35);
+            background-color: transparent;
+        }
+        #version-knob-panel .knob-den,
+        #version-knob-panel .knob-dene,
+        #version-knob-panel .knob-denem,
+        #version-knob-panel .knob-deneme,
+        #version-knob-panel .knob-light,
+        #version-knob-panel .knob-dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+        #version-knob-panel .knob-den {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: -110px 0 0 -110px;
+            border-radius: 100%;
+            box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.6), 0 2px 20px rgba(59, 59, 65, 0.8);
+            background: radial-gradient(circle at center, #34343a 0%, #222226 100%);
+        }
+        #version-knob-panel .knob-dene {
+            z-index: 4;
+            width: 140px;
+            height: 140px;
+            margin: -70px 0 0 -70px;
+            border-radius: 100%;
+            box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.5), 0 3px 13px rgba(0, 0, 0, 0.85);
+            background: linear-gradient(to bottom, #2d2d32 0%, #242428 100%);
+        }
+        #version-knob-panel .knob-denem {
+            width: 120px;
+            height: 120px;
+            margin: -60px 0 0 -60px;
+            border-radius: 100%;
+            background: linear-gradient(to bottom, #242428 0%, #2d2d32 100%);
+        }
+        #version-knob-panel .knob-deneme {
+            width: 100px;
+            height: 100px;
+            margin: -50px 0 0 -50px;
+            border-radius: 100%;
+            box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.6), 0 8px 20px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(to bottom, #2a2a2f 0%, #26262b 100%);
+        }
+        #version-knob-panel .knob-switch {
+            z-index: 3;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #version-knob-panel .knob-switch label {
+            z-index: 2;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 24px;
+            margin-top: -12px;
+            transform-origin: 0% 50%;
+        }
+        #version-knob-panel .knob-switch label span {
+            z-index: 2;
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 32px;
+            height: 100%;
+            font-weight: 700;
+            font-size: 10px;
+            line-height: 24px;
+            text-align: center;
+            color: #c1c6d7;
+            text-shadow: 0 1px 0 #19191d;
+            font-family: 'Hanken Grotesk', sans-serif;
+        }
+        #version-knob-panel .knob-switch input {
+            position: absolute;
+            opacity: 0;
+            visibility: hidden;
+        }
+        #version-knob-panel .knob-light {
+            z-index: 1;
+            width: 50%;
+            height: 100px;
+            margin-top: -50px;
+            transform-origin: 0% 50%;
+            transform: rotate(-90deg);
+            transition: all 0.5s;
+        }
+        #version-knob-panel .knob-light span {
+            opacity: 0.4;
+            position: absolute;
+            top: 0;
+            left: 15px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(ellipse at center, rgba(135, 206, 250, 1) 0%, rgba(135, 206, 250, 0.42) 42%, rgba(135, 206, 250, 0) 72%, rgba(135, 206, 250, 0) 100%);
+        }
+        #version-knob-panel .knob-dot {
+            z-index: 6;
+            width: 50%;
+            height: 12px;
+            margin-top: -6px;
+            transform-origin: 0% 50%;
+            transition: all 0.5s;
+        }
+        #version-knob-panel .knob-dot span {
+            position: absolute;
+            top: 0;
+            left: 30px;
+            width: 12px;
+            height: 12px;
+            border-radius: 100%;
+            background: linear-gradient(to bottom, #87CEFA 0%, #5a9fd1 100%);
+        }
+        #version-knob-panel .knob-deneme .ram-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c1c6d7;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-shadow: 0 1px 0 #19191d;
+            font-family: 'Hanken Grotesk', sans-serif;
+        }
         .neu-play {
             --primary: #87CEFA;
             --neutral-1: #2d2d32;
@@ -810,7 +995,8 @@
             z-index: 2;
             pointer-events: none;
         }
-        #btn-play-content {
+        #btn-play-content,
+        .neu-play > span {
             position: relative;
             z-index: 3;
         }
@@ -1362,8 +1548,9 @@
 </div>
 <span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
 </div>
-<div id="version-card" class="neu-card-sm p-3 flex items-center justify-between titlebar-no-drag">
-<div class="flex flex-col">
+<div class="flex items-stretch gap-2 relative">
+<div id="version-card" class="neu-card-sm p-3 flex items-center justify-between flex-1 min-w-0 titlebar-no-drag">
+<div class="flex flex-col min-w-0">
 <span class="font-label-sm text-[10px] text-on-surface-variant">Version</span>
 <span id="version-label" class="font-body-md text-sm font-semibold text-on-surface flex items-center gap-2">
         Fabric 1.20.4
@@ -1372,6 +1559,30 @@
 </span>
 </div>
 <span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</div>
+<button id="btn-version-minus" class="neu-square-btn titlebar-no-drag" aria-label="Decrease version">
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</button>
+<div id="version-knob-panel" class="version-knob-panel">
+<div class="knob-de">
+<div class="knob-den">
+<div class="knob-switch" id="ram-switch-wrap">
+<div class="knob-light"><span></span></div>
+<div class="knob-dot"><span></span></div>
+<div class="knob-dene">
+<div class="knob-denem">
+<div class="knob-deneme"><span class="ram-center">RAM</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <button id="btn-play" disabled class="neu-play titlebar-no-drag">
 <span id="btn-play-content" class="flex items-center justify-center gap-2">
@@ -1645,16 +1856,10 @@
        <div>
          <label class="block font-bold text-on-surface mb-2">CurseForge API Proxy URL</label>
          <p class="text-sm text-on-surface-variant mb-2">Enter the Cloudflare Worker URL for proxying CurseForge requests.</p>
-         <div class="neu-input-container">
-           <input id="setting-curseforge-proxy" type="text" placeholder="https://my-proxy.workers.dev"/>
-         </div>
+       <div class="neu-input-container">
+          <input id="setting-curseforge-proxy" type="text" placeholder="https://my-proxy.workers.dev"/>
        </div>
-
-       <div class="flex justify-end mt-4">
-          <button id="btn-save-settings" class="px-6 py-3 rounded-xl bg-gradient-to-b from-primary-container to-inverse-primary text-white font-bold hover:shadow-[0_0_15px_rgba(75,142,255,0.4)] transition-all">
-             Save Changes
-          </button>
-       </div>
+     </div>
     </div>
   </div>
 </div>
@@ -1708,13 +1913,14 @@
 
 <!-- kilit ekrani -->
 <div id="view-lock" class="hidden fixed inset-0 z-[100] modal-backdrop flex-col items-center justify-center titlebar-no-drag">
-   <div class="glass-card rounded-2xl p-8 w-full max-w-sm mx-4 border border-white/10 shadow-2xl text-center">
+   <div class="neu-modal-box p-8 w-full max-w-sm mx-4 text-center">
       <span class="material-symbols-outlined text-primary text-[48px] mb-4">lock</span>
       <h2 class="font-headline-md text-2xl font-bold text-on-surface mb-2">Launcher Locked</h2>
       <p class="text-sm text-on-surface-variant mb-6">Please enter the password to continue.</p>
-      
-      <input id="lock-password-input" type="password" placeholder="Password" class="w-full input-well rounded-xl px-4 py-3 mb-4 outline-none text-center"/>
-      <button id="btn-unlock" class="w-full py-3 rounded-xl bg-gradient-to-b from-primary-container to-inverse-primary text-white font-bold">Unlock</button>
+      <div class="neu-input-container mb-4">
+         <input id="lock-password-input" type="password" placeholder="Password" class="text-center"/>
+      </div>
+      <button id="btn-unlock" class="neu-primary-btn"><span>Unlock</span></button>
    </div>
 </div>
 
@@ -1783,19 +1989,22 @@
 
 <!-- modpack surum penceresi -->
 <div id="mp-version-modal" class="hidden fixed inset-0 z-50 modal-backdrop items-center justify-center titlebar-no-drag">
-<div class="glass-card rounded-2xl p-6 w-full max-w-lg mx-4 border border-white/10 shadow-2xl">
+<div class="neu-modal-box p-6 w-full max-w-lg mx-4">
 <div class="flex items-center justify-between mb-6">
 <h2 id="mp-version-title" class="font-headline-md text-xl font-bold text-on-surface truncate pr-4">Install Modpack</h2>
-<button data-close-modal="mp-version-modal" class="window-btn"><span class="material-symbols-outlined">close</span></button>
+<button data-close-modal="mp-version-modal" class="neu-modal-close"><span class="material-symbols-outlined">close</span></button>
 </div>
 <label id="mp-version-label" class="font-label-sm text-label-sm text-on-surface-variant block mb-2">Select Version</label>
-<select id="mp-version-select" class="w-full input-well rounded-xl px-4 py-3 mb-6 text-on-surface outline-none cursor-pointer"></select>
-<button id="btn-install-modpack" class="w-full py-3 rounded-xl bg-gradient-to-b from-primary-container to-inverse-primary text-white font-bold">Install</button>
+<div class="neu-input-container mb-6">
+<select id="mp-version-select" class="cursor-pointer"></select>
+</div>
+<button id="btn-install-modpack" class="neu-primary-btn"><span>Install</span></button>
 <div id="mp-version-loading" class="hidden flex items-center justify-center gap-2 mt-4 text-on-surface-variant text-sm">
   <span class="material-symbols-outlined animate-spin">sync</span> Loading versions...
 </div>
 </div>
 </div>
 
+<script src="tauri-bridge.js"></script>
 <script src="renderer.js"></script>
 </body></html>

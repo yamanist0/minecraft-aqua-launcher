@@ -1,49 +1,18 @@
 {
   "name": "aqua-launcher",
   "version": "2.0.0",
-  "description": "Aqua Launcher - Minecraft launcher",
-  "main": "main.js",
+  "description": "Aqua Launcher - Modern Minecraft Launcher built with Tauri v2",
   "scripts": {
-    "start": "electron .",
-    "dev": "electron .",
-    "package": "electron-builder --win --x64 --dir",
-    "build": "electron-builder --win nsis --x64"
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "tauri": "tauri"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^35.0.0",
-    "electron-builder": "^26.0.0",
-    "pngjs": "^7.0.0"
+    "@tauri-apps/cli": "^2.1.0"
   },
   "dependencies": {
-    "adm-zip": "^0.5.18",
-    "minecraft-launcher-core": "^3.18.2",
-    "msmc": "^5.0.5"
-  },
-  "build": {
-    "appId": "com.aqua.launcher",
-    "productName": "Aqua Launcher",
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "**/*",
-      "!dist/**",
-      "!build.bat"
-    ],
-    "win": {
-      "target": [
-        "nsis"
-      ],
-      "icon": "assets/icon.ico"
-    },
-    "nsis": {
-      "oneClick": false,
-      "perMachine": false,
-      "allowToChangeInstallationDirectory": true,
-      "allowElevation": true,
-      "artifactName": "${productName}-Setup-${version}.${ext}"
-    }
+    "@tauri-apps/api": "^2.1.0"
   }
 }

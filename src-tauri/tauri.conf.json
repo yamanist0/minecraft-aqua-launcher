@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Aqua Launcher",
+  "version": "2.0.0",
+  "identifier": "com.aqua.launcher",
+  "build": {
+    "frontendDist": "../"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "url": "launcher.html",
+        "title": "Aqua Launcher",
+        "width": 1280,
+        "height": 720,
+        "minWidth": 960,
+        "minHeight": 540,
+        "decorations": false,
+        "transparent": false,
+        "shadow": true,
+        "resizable": true,
+        "fullscreen": false,
+        "visible": true
+      }
+    ],
+    "security": {
+      "csp": null
+    },
+    "withGlobalTauri": true
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "../assets/icon.ico",
+      "../assets/icon.png"
+    ]
+  }
+}

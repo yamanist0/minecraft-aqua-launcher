@@ -22,6 +22,8 @@ const state = {
   mpServerSearchQuery: '',
 };
 
+document.addEventListener('contextmenu', (e) => e.preventDefault());
+
 const PROGRESS_LABELS = {
   assets: 'Downloading assets',
   'assets-copy': 'Copying assets',
@@ -954,6 +956,65 @@ async function refreshLoaderVersions() {
   }
 }
 
+// ram secici knob panelini uretir
+async function initRamKnob() {
+  const wrap = $('ram-switch-wrap');
+  if (!wrap) return;
+  const light = wrap.querySelector('.knob-light');
+  let totalGb = 32;
+  try {
+    const mem = await window.launcherAPI.getSystemMemory();
+    if (mem && mem.totalGb > 0) totalGb = Math.min(Math.round(mem.totalGb), 32);
+  } catch (e) {
+    console.error('system memory alinamadi, varsayilan 32', e);
+  }
+  const optCount = Math.max(1, totalGb);
+  const step = 360 / optCount;
+  const labelFont = optCount > 16 ? 9 : 11;
+  const spanW = optCount > 16 ? 26 : 32;
+  let css = '';
+  for (let i = 1; i <= optCount; i++) {
+    const ang = -90 + (i - 1) * step;
+    const label = document.createElement('label');
+    label.setAttribute('for', `ram-switch-${i}`);
+    label.innerHTML = `<span>${i}</span>`;
+    wrap.insertBefore(label, light);
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'ram-switch';
+    input.id = `ram-switch-${i}`;
+    input.value = String(i);
+    wrap.insertBefore(input, light);
+    css += `#version-knob-panel label[for="ram-switch-${i}"] { transform: rotate(${ang}deg); }`;
+    css += `#version-knob-panel label[for="ram-switch-${i}"] span { transform: rotate(${-ang}deg); font-size: ${labelFont}px; width: ${spanW}px; }`;
+    css += `#version-knob-panel #ram-switch-${i}:checked ~ .knob-light { transform: rotate(${ang}deg); }`;
+    css += `#version-knob-panel #ram-switch-${i}:checked ~ .knob-dot { transform: rotate(${ang}deg); }`;
+    css += `#version-knob-panel #ram-switch-${i}:checked ~ .knob-dot span { opacity: 0.9; }`;
+  }
+  const style = document.createElement('style');
+  style.id = 'ram-knob-dynamic';
+  style.textContent = css;
+  document.head.appendChild(style);
+  const saved = state.settings?.memory;
+  let selected;
+  if (saved >= 1 && saved <= optCount) {
+    selected = saved;
+  } else {
+    selected = Math.max(1, Math.round(optCount / 4));
+  }
+  const selInput = $(`ram-switch-${selected}`);
+  if (selInput) selInput.checked = true;
+  state.memory = selected;
+  wrap.addEventListener('change', () => {
+    const checked = wrap.querySelector('input:checked');
+    if (!checked) return;
+    const gb = parseInt(checked.value, 10);
+    state.memory = gb;
+    state.settings.memory = gb;
+    window.launcherAPI.saveSettings(state.settings).catch((e) => console.error(e));
+  });
+}
+
 function bindEvents() {
   document.querySelectorAll('.modal-backdrop').forEach(modal => {
      modal.addEventListener('click', (e) => {
@@ -974,6 +1035,10 @@ function bindEvents() {
   });
 
   $('account-card').addEventListener('click', () => openModal('account-modal'));
+    $('btn-version-minus')?.addEventListener('click', () => {
+    $('version-knob-panel')?.classList.toggle('open');
+    $('btn-version-minus')?.classList.toggle('active');
+  });
   $('version-card').addEventListener('click', async () => {
     openModal('version-modal');
     setLoaderTab(state.loader);
@@ -1210,7 +1275,7 @@ function bindEvents() {
     switchView('home');
     revealPageUI('view-home-content');
     loadHomeData();
-    scrollHomeToTop();
+    scrollViewToTop('view-home-content');
   });
   $('nav-modpacks')?.addEventListener('click', () => {
     switchView('modpacks');
@@ -1310,13 +1375,14 @@ function bindEvents() {
      }
   });
 
-  $('btn-save-settings')?.addEventListener('click', async () => {
+  const saveSettingsFromUi = () => {
       const urls = $('setting-modpack-urls').value.split('\n').map(s => s.trim()).filter((s) => s.length > 0);
       const serverListUrl = $('setting-server-list-url').value.trim();
       let cfProxy = $('setting-curseforge-proxy').value.trim();
       if (!cfProxy) cfProxy = 'https://patient-darkness-1364.yaman26.workers.dev/';
 
       const newSettings = {
+         ...state.settings,
          password: $('setting-password').value,
          javaArgs: $('setting-java-args').value,
          curseforgeProxyUrl: cfProxy,
@@ -1324,14 +1390,17 @@ function bindEvents() {
          serverListUrl: serverListUrl || 'https://raw.githubusercontent.com/Yaman-the-coder/aqua-launcher/refs/heads/main/servers.json',
          freePanorama: $('setting-free-panorama').checked,
          panoramaDim: Number($('setting-panorama-dim')?.value ?? 75),
-         memory: state.memory,
       };
       state.settings = newSettings;
       freePanorama = !!newSettings.freePanorama;
       applyPanoramaMode();
-      await window.launcherAPI.saveSettings(newSettings);
-      setStatus('Settings Saved', 'Settings saved.');
-      await loadHomeData();
+      window.launcherAPI.saveSettings(newSettings).catch(e => console.error(e));
+  };
+
+  ['setting-password', 'setting-java-args', 'setting-modpack-urls', 'setting-server-list-url', 'setting-curseforge-proxy', 'setting-open-console', 'setting-free-panorama', 'setting-panorama-dim'].forEach((id) => {
+      const el = $(id);
+      if (!el) return;
+      el.addEventListener('change', saveSettingsFromUi);
   });
 
   $('setting-free-panorama')?.addEventListener('change', (e) => {
@@ -2156,6 +2225,7 @@ async function init() {
 
 async function setupCore() {
   bindEvents();
+  await initRamKnob();
   freePanorama = !!state.settings?.freePanorama;
   applyPanoramaMode();
   const dimSlider = $('setting-panorama-dim');
