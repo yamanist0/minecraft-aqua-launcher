@@ -1,6 +1,6 @@
 {
   "name": "aqua-launcher",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Aqua Launcher - Modern Minecraft Launcher built with Tauri v2",
   "scripts": {
     "dev": "tauri dev",
