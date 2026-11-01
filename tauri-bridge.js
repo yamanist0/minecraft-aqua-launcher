@@ -42,6 +42,7 @@
     },
     close: async () => {
       const tauri = getTauri();
+      // check if tauri api is available before calling it
       if (tauri && tauri.window && tauri.window.getCurrentWindow) {
         return tauri.window.getCurrentWindow().close();
       }
