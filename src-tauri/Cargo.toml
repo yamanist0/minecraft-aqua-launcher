@@ -1,6 +1,6 @@
 [package]
 name = "aqua-launcher"
-version = "2.0.0"
+version = "2.0.1"
 description = "Aqua Launcher - Minecraft Launcher"
 authors = ["Yaman"]
 edition = "2021"
@@ -46,3 +46,4 @@ lighty-modsloader = { version = "26.5.12", features = ["all-mods"] }
 
 [profile.dev]
 debug = 1
+

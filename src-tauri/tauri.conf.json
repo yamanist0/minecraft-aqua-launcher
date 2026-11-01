@@ -1,10 +1,15 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Aqua Launcher",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "identifier": "com.aqua.launcher",
   "build": {
-    "frontendDist": "../"
+    "frontendDist": [
+      "../launcher.html",
+      "../renderer.js",
+      "../tauri-bridge.js",
+      "../assets"
+    ]
   },
   "app": {
     "windows": [
@@ -38,3 +43,4 @@
     ]
   }
 }
+
