@@ -196,7 +196,7 @@ function registerIpcHandlers() {
     function fetchJson(u) {
       return new Promise((resolve, reject) => {
         try {
-          const req = https.get(u, { timeout: 8000 }, (res) => {
+          const r = https.get(u, { timeout: 8000 }, (res) => {
             let body = '';
             res.setEncoding('utf8');
             res.on('data', (chunk) => (body += chunk));
@@ -209,10 +209,10 @@ function registerIpcHandlers() {
               }
             });
           });
-          req.on('timeout', () => {
-            req.destroy(new Error('Request timed out'));
+          r.on('timeout', () => {
+            r.destroy(new Error('Request timed out'));
           });
-          req.on('error', (err) => reject(err));
+          r.on('error', (err) => reject(err));
         } catch (e) {
           reject(e);
         }
